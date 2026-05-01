@@ -7,12 +7,11 @@ describe('specialist-booking-overview', () => {
       components: [SpecialistBookingOverview],
       html: `<specialist-booking-overview></specialist-booking-overview>`,
     });
-    expect(page.root).toEqualHtml(`
-      <specialist-booking-overview>
-        <mock:shadow-root>
-          <slot></slot>
-        </mock:shadow-root>
-      </specialist-booking-overview>
-    `);
+
+    const bookingOverview = page.rootInstance as SpecialistBookingOverview;
+    const expectedAppointments = bookingOverview?.appointments?.length;
+
+    const items = page.root.shadowRoot.querySelectorAll('md-list-item');
+    expect(items.length).toEqual(expectedAppointments);
   });
 });
