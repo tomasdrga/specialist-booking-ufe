@@ -1,0 +1,8 @@
+.openapi-generator-ignore
+apis/SpecialistBookingApi.ts
+apis/index.ts
+index.ts
+models/Appointment.ts
+models/TimeSlot.ts
+models/index.ts
+runtime.ts

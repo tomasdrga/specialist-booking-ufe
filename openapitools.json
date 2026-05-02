@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "generator-cli": {
+    "useDocker": true,
+    "version": "6.6.0",
+    "generators": {
+      "specialist-booking": {
+        "generatorName": "typescript-fetch",
+        "glob": "api/specialist-booking.openapi.yaml",
+        "output": "#{cwd}/src/api/specialist-booking",
+        "additionalProperties": {
+          "supportsES6": "true",
+          "withInterfaces": true
+        }
+      }
+    }
+  }
+}

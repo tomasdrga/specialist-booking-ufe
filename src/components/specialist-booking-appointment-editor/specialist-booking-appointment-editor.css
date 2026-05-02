@@ -1,0 +1,29 @@
+:host {
+  --_editor-gap: var(--booking-gap, 0.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: var(--_editor-gap);
+  padding: var(--_editor-gap);
+}
+
+.duration-slider {
+  display: flex;
+  flex-direction: row;
+  align-content: space-around;
+  align-items: center;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+.stretch-fill {
+  flex: 10 0 0;
+}
+
+md-divider {
+  margin-bottom: var(--_editor-gap);
+}

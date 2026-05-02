@@ -1,0 +1,203 @@
+openapi: 3.0.0
+servers:
+  - description: Cluster Endpoint
+    url: /api
+info:
+  description: Specialist appointment booking management for Web-In-Cloud system
+  version: '1.0.0'
+  title: Specialist Booking API
+  contact:
+    email: xdrga@stuba.sk
+  license:
+    name: CC BY 4.0
+    url: 'https://creativecommons.org/licenses/by/4.0/'
+tags:
+  - name: specialistBooking
+    description: Specialist appointment booking API
+paths:
+  '/specialist-booking/{clinicId}/appointments':
+    get:
+      tags: [specialistBooking]
+      summary: Provides appointments for selected clinic
+      operationId: getAppointments
+      description: By using clinicId you get list of appointments for a specialist clinic
+      parameters:
+        - in: path
+          name: clinicId
+          description: pass the id of the specialist clinic
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: value of appointments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Appointment'
+              examples:
+                response:
+                  $ref: '#/components/examples/AppointmentsExample'
+        '404':
+          description: Clinic with such ID does not exist
+  '/specialist-booking/{clinicId}/time-slots':
+    get:
+      tags: [specialistBooking]
+      summary: Provides available time slots for selected clinic
+      operationId: getTimeSlots
+      description: By using clinicId you get list of configured time slots
+      parameters:
+        - in: path
+          name: clinicId
+          description: pass the id of the specialist clinic
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: value of time slots
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TimeSlot'
+              examples:
+                response:
+                  $ref: '#/components/examples/TimeSlotsExample'
+        '404':
+          description: Clinic with such ID does not exist
+components:
+  schemas:
+    Appointment:
+      type: object
+      required: [id, patientId, patientName, startsAt, durationMinutes, examinationType, status]
+      properties:
+        id:
+          type: string
+          example: apt-001
+          description: Unique id of appointment
+        patientId:
+          type: string
+          example: 460527-jozef-pucik
+          description: Unique identifier of the patient known to Web-In-Cloud system
+        patientName:
+          type: string
+          example: Jožko Púčik
+          description: Name of patient for this appointment
+        startsAt:
+          type: string
+          format: date-time
+          example: '2038-12-24T10:35:00Z'
+          description: Scheduled start timestamp
+        durationMinutes:
+          type: integer
+          format: int32
+          example: 30
+          description: Duration of appointment in minutes
+        examinationType:
+          type: string
+          example: Kardiologické vyšetrenie
+          description: Requested examination type
+        status:
+          type: string
+          example: confirmed
+          description: Workflow state of appointment
+        note:
+          type: string
+          example: Kontrola po zákroku
+          description: Optional note
+      example:
+        $ref: '#/components/examples/AppointmentExample'
+    TimeSlot:
+      type: object
+      required: [id, startsAt, durationMinutes, capacity, booked, examinationType, urgentBlocked]
+      properties:
+        id:
+          type: string
+          example: slot-001
+          description: Unique id of time slot
+        startsAt:
+          type: string
+          format: date-time
+          example: '2038-12-24T11:00:00Z'
+          description: Slot start timestamp
+        durationMinutes:
+          type: integer
+          format: int32
+          example: 30
+          description: Slot duration in minutes
+        capacity:
+          type: integer
+          format: int32
+          example: 2
+          description: Maximum number of appointments in slot
+        booked:
+          type: integer
+          format: int32
+          example: 1
+          description: Number of occupied places in slot
+        examinationType:
+          type: string
+          example: Neurologická konzultácia
+          description: Supported examination type for slot
+        urgentBlocked:
+          type: boolean
+          example: false
+          description: Whether slot is blocked for urgent use
+      example:
+        $ref: '#/components/examples/TimeSlotExample'
+  examples:
+    AppointmentExample:
+      value:
+        id: apt-001
+        patientId: 460527-jozef-pucik
+        patientName: Jožko Púčik
+        startsAt: '2038-12-24T10:35:00.000Z'
+        durationMinutes: 30
+        examinationType: Kardiologické vyšetrenie
+        status: confirmed
+        note: Kontrola po zákroku
+    AppointmentsExample:
+      value:
+        - id: apt-001
+          patientId: 460527-jozef-pucik
+          patientName: Jožko Púčik
+          startsAt: '2038-12-24T10:35:00.000Z'
+          durationMinutes: 30
+          examinationType: Kardiologické vyšetrenie
+          status: confirmed
+        - id: apt-002
+          patientId: 780907-ferdinand-tre
+          patientName: Ferdinand Trety
+          startsAt: '2038-12-24T11:20:00.000Z'
+          durationMinutes: 45
+          examinationType: Neurologická konzultácia
+          status: requested
+    TimeSlotExample:
+      value:
+        id: slot-001
+        startsAt: '2038-12-24T11:00:00.000Z'
+        durationMinutes: 30
+        capacity: 2
+        booked: 1
+        examinationType: Neurologická konzultácia
+        urgentBlocked: false
+    TimeSlotsExample:
+      value:
+        - id: slot-001
+          startsAt: '2038-12-24T11:00:00.000Z'
+          durationMinutes: 30
+          capacity: 2
+          booked: 1
+          examinationType: Neurologická konzultácia
+          urgentBlocked: false
+        - id: slot-002
+          startsAt: '2038-12-24T12:00:00.000Z'
+          durationMinutes: 30
+          capacity: 1
+          booked: 0
+          examinationType: Dermatologická kontrola
+          urgentBlocked: true
