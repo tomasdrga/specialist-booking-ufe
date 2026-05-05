@@ -15,6 +15,16 @@
   max-width: 980px;
   margin: 0 auto 1.5rem;
   padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: end;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .eyebrow,
@@ -144,6 +154,11 @@ md-list {
 @media (max-width: 820px) {
   :host {
     padding: 1rem;
+  }
+
+  .hero {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .layout {

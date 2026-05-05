@@ -44,9 +44,16 @@ export class SpecialistBookingApp {
     let element = 'list';
     let appointmentId = '@new';
 
+    let slotId = '@new';
+
     if (this.relativePath.startsWith('appointment/')) {
       element = 'editor';
       appointmentId = this.relativePath.split('/')[1];
+    } else if (this.relativePath.startsWith('slots')) {
+      element = 'slots';
+    } else if (this.relativePath.startsWith('slot/')) {
+      element = 'slot-editor';
+      slotId = this.relativePath.split('/')[1];
     }
 
     const navigate = (path: string) => {
@@ -57,11 +64,32 @@ export class SpecialistBookingApp {
     return (
       <Host>
         {element === 'editor' ? (
-          <specialist-booking-appointment-editor appointment-id={appointmentId} oneditor-closed={() => navigate('./list')}></specialist-booking-appointment-editor>
+          <specialist-booking-appointment-editor
+            appointment-id={appointmentId}
+            clinic-id={this.clinicId}
+            api-base={this.apiBase}
+            oneditor-closed={() => navigate('./list')}
+          ></specialist-booking-appointment-editor>
+        ) : element === 'slot-editor' ? (
+          <specialist-booking-slot-editor
+            slot-id={slotId}
+            clinic-id={this.clinicId}
+            api-base={this.apiBase}
+            oneditor-closed={() => navigate('./slots')}
+          ></specialist-booking-slot-editor>
+        ) : element === 'slots' ? (
+          <specialist-booking-slot-calendar
+            clinic-id={this.clinicId}
+            api-base={this.apiBase}
+            onappointments-opened={() => navigate('./list')}
+            onslot-create-clicked={() => navigate('./slot/@new')}
+            onslot-clicked={(ev: CustomEvent<string>) => navigate('./slot/' + ev.detail)}
+          ></specialist-booking-slot-calendar>
         ) : (
           <specialist-booking-appointment-list
             clinic-id={this.clinicId}
             api-base={this.apiBase}
+            onslots-opened={() => navigate('./slots')}
             onentry-clicked={(ev: CustomEvent<string>) => navigate('./appointment/' + ev.detail)}
           ></specialist-booking-appointment-list>
         )}

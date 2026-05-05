@@ -8,6 +8,7 @@ import { Appointment, Configuration, SpecialistBookingApi, TimeSlot } from '../.
 })
 export class SpecialistBookingAppointmentList {
   @Event({ eventName: 'entry-clicked' }) entryClicked: EventEmitter<string>;
+  @Event({ eventName: 'slots-opened' }) slotsOpened: EventEmitter<string>;
 
   @Prop() apiBase: string;
   @Prop() clinicId: string;
@@ -54,8 +55,17 @@ export class SpecialistBookingAppointmentList {
     return (
       <Host>
         <section class="hero">
-          <p class="eyebrow">Systém objednávania ku špecialistovi</p>
-          <h1>Prehľad dnešných objednávok a kapacity ambulancie</h1>
+          <div>
+            <p class="eyebrow">Systém objednávania ku špecialistovi</p>
+            <h1>Prehľad dnešných objednávok a kapacity ambulancie</h1>
+          </div>
+          <div class="hero-actions">
+            <md-outlined-button onClick={() => this.slotsOpened.emit('slots')}>Kalendár termínov</md-outlined-button>
+            <md-filled-button onClick={() => this.entryClicked.emit('@new')}>
+              <md-icon slot="icon">add</md-icon>
+              Nová objednávka
+            </md-filled-button>
+          </div>
         </section>
 
         {this.errorMessage ? (

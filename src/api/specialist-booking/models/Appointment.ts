@@ -20,49 +20,61 @@ import { exists, mapValues } from '../runtime';
  */
 export interface Appointment {
     /**
-     * Unique id of appointment
+     * 
      * @type {string}
      * @memberof Appointment
      */
     id: string;
     /**
-     * Unique identifier of the patient known to Web-In-Cloud system
+     * 
      * @type {string}
      * @memberof Appointment
      */
     patientId: string;
     /**
-     * Name of patient for this appointment
+     * 
      * @type {string}
      * @memberof Appointment
      */
     patientName: string;
     /**
-     * Scheduled start timestamp
+     * 
+     * @type {string}
+     * @memberof Appointment
+     */
+    patientEmail?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof Appointment
+     */
+    referringDoctor?: string;
+    /**
+     * 
      * @type {Date}
      * @memberof Appointment
      */
     startsAt: Date;
     /**
-     * Duration of appointment in minutes
+     * 
      * @type {number}
      * @memberof Appointment
      */
     durationMinutes: number;
     /**
-     * Requested examination type
+     * 
      * @type {string}
      * @memberof Appointment
      */
     examinationType: string;
     /**
-     * Workflow state of appointment
+     * 
      * @type {string}
      * @memberof Appointment
      */
     status: string;
     /**
-     * Optional note
+     * 
      * @type {string}
      * @memberof Appointment
      */
@@ -98,6 +110,8 @@ export function AppointmentFromJSONTyped(json: any, ignoreDiscriminator: boolean
         'id': json['id'],
         'patientId': json['patientId'],
         'patientName': json['patientName'],
+        'patientEmail': !exists(json, 'patientEmail') ? undefined : json['patientEmail'],
+        'referringDoctor': !exists(json, 'referringDoctor') ? undefined : json['referringDoctor'],
         'startsAt': (new Date(json['startsAt'])),
         'durationMinutes': json['durationMinutes'],
         'examinationType': json['examinationType'],
@@ -118,6 +132,8 @@ export function AppointmentToJSON(value?: Appointment | null): any {
         'id': value.id,
         'patientId': value.patientId,
         'patientName': value.patientName,
+        'patientEmail': value.patientEmail,
+        'referringDoctor': value.referringDoctor,
         'startsAt': (value.startsAt.toISOString()),
         'durationMinutes': value.durationMinutes,
         'examinationType': value.examinationType,

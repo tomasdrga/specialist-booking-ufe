@@ -1,21 +1,25 @@
 :host {
-  --_editor-gap: var(--booking-gap, 0.5rem);
+  --_editor-gap: var(--booking-gap, 0.75rem);
   display: flex;
   flex-direction: column;
   gap: var(--_editor-gap);
   padding: var(--_editor-gap);
 }
 
-.duration-slider {
-  display: flex;
-  flex-direction: row;
-  align-content: space-around;
+form {
+  display: grid;
+  gap: var(--_editor-gap);
+}
+
+.slider-row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
   align-items: center;
+  gap: 1rem;
 }
 
 .actions {
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
   gap: 1rem;
 }
@@ -24,14 +28,15 @@
   flex: 10 0 0;
 }
 
-md-divider {
-  margin-bottom: var(--_editor-gap);
-}
-
 .error {
   margin: auto;
   color: #b91c1c;
   font-size: 1.5rem;
   font-weight: 900;
   text-align: center;
+}
+
+@media (max-width: 720px) {
+  .slider-row { grid-template-columns: 1fr; }
+  .actions { flex-wrap: wrap; }
 }

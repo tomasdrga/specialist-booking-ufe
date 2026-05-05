@@ -25,12 +25,54 @@ import {
     TimeSlotToJSON,
 } from '../models';
 
+export interface CreateAppointmentRequest {
+    clinicId: string;
+    appointment: Appointment;
+}
+
+export interface CreateTimeSlotRequest {
+    clinicId: string;
+    timeSlot: TimeSlot;
+}
+
+export interface DeleteAppointmentRequest {
+    clinicId: string;
+    appointmentId: string;
+}
+
+export interface DeleteTimeSlotRequest {
+    clinicId: string;
+    slotId: string;
+}
+
+export interface GetAppointmentRequest {
+    clinicId: string;
+    appointmentId: string;
+}
+
 export interface GetAppointmentsRequest {
     clinicId: string;
 }
 
+export interface GetTimeSlotRequest {
+    clinicId: string;
+    slotId: string;
+}
+
 export interface GetTimeSlotsRequest {
     clinicId: string;
+}
+
+export interface UpdateAppointmentRequest {
+    clinicId: string;
+    appointmentId: string;
+    appointment: Appointment;
+}
+
+export interface UpdateTimeSlotRequest {
+    clinicId: string;
+    slotId: string;
+    timeSlot: TimeSlot;
 }
 
 /**
@@ -41,9 +83,89 @@ export interface GetTimeSlotsRequest {
  */
 export interface SpecialistBookingApiInterface {
     /**
-     * By using clinicId you get list of appointments for a specialist clinic
+     * 
+     * @summary Creates appointment in selected clinic
+     * @param {string} clinicId id of the specialist clinic
+     * @param {Appointment} appointment 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SpecialistBookingApiInterface
+     */
+    createAppointmentRaw(requestParameters: CreateAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Appointment>>;
+
+    /**
+     * Creates appointment in selected clinic
+     */
+    createAppointment(requestParameters: CreateAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Appointment>;
+
+    /**
+     * 
+     * @summary Creates time slot for selected clinic
+     * @param {string} clinicId id of the specialist clinic
+     * @param {TimeSlot} timeSlot 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SpecialistBookingApiInterface
+     */
+    createTimeSlotRaw(requestParameters: CreateTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TimeSlot>>;
+
+    /**
+     * Creates time slot for selected clinic
+     */
+    createTimeSlot(requestParameters: CreateTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TimeSlot>;
+
+    /**
+     * 
+     * @summary Cancels appointment
+     * @param {string} clinicId id of the specialist clinic
+     * @param {string} appointmentId id of appointment
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SpecialistBookingApiInterface
+     */
+    deleteAppointmentRaw(requestParameters: DeleteAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Cancels appointment
+     */
+    deleteAppointment(requestParameters: DeleteAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
+
+    /**
+     * 
+     * @summary Deletes time slot
+     * @param {string} clinicId id of the specialist clinic
+     * @param {string} slotId id of time slot
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SpecialistBookingApiInterface
+     */
+    deleteTimeSlotRaw(requestParameters: DeleteTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     * Deletes time slot
+     */
+    deleteTimeSlot(requestParameters: DeleteTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void>;
+
+    /**
+     * 
+     * @summary Provides appointment detail
+     * @param {string} clinicId id of the specialist clinic
+     * @param {string} appointmentId id of appointment
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SpecialistBookingApiInterface
+     */
+    getAppointmentRaw(requestParameters: GetAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Appointment>>;
+
+    /**
+     * Provides appointment detail
+     */
+    getAppointment(requestParameters: GetAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Appointment>;
+
+    /**
+     * 
      * @summary Provides appointments for selected clinic
-     * @param {string} clinicId pass the id of the specialist clinic
+     * @param {string} clinicId id of the specialist clinic
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SpecialistBookingApiInterface
@@ -51,15 +173,30 @@ export interface SpecialistBookingApiInterface {
     getAppointmentsRaw(requestParameters: GetAppointmentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Appointment>>>;
 
     /**
-     * By using clinicId you get list of appointments for a specialist clinic
      * Provides appointments for selected clinic
      */
     getAppointments(requestParameters: GetAppointmentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Appointment>>;
 
     /**
-     * By using clinicId you get list of configured time slots
+     * 
+     * @summary Provides time slot detail
+     * @param {string} clinicId id of the specialist clinic
+     * @param {string} slotId id of time slot
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SpecialistBookingApiInterface
+     */
+    getTimeSlotRaw(requestParameters: GetTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TimeSlot>>;
+
+    /**
+     * Provides time slot detail
+     */
+    getTimeSlot(requestParameters: GetTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TimeSlot>;
+
+    /**
+     * 
      * @summary Provides available time slots for selected clinic
-     * @param {string} clinicId pass the id of the specialist clinic
+     * @param {string} clinicId id of the specialist clinic
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof SpecialistBookingApiInterface
@@ -67,10 +204,43 @@ export interface SpecialistBookingApiInterface {
     getTimeSlotsRaw(requestParameters: GetTimeSlotsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<TimeSlot>>>;
 
     /**
-     * By using clinicId you get list of configured time slots
      * Provides available time slots for selected clinic
      */
     getTimeSlots(requestParameters: GetTimeSlotsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<TimeSlot>>;
+
+    /**
+     * 
+     * @summary Updates appointment
+     * @param {string} clinicId id of the specialist clinic
+     * @param {string} appointmentId id of appointment
+     * @param {Appointment} appointment 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SpecialistBookingApiInterface
+     */
+    updateAppointmentRaw(requestParameters: UpdateAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Appointment>>;
+
+    /**
+     * Updates appointment
+     */
+    updateAppointment(requestParameters: UpdateAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Appointment>;
+
+    /**
+     * 
+     * @summary Updates time slot
+     * @param {string} clinicId id of the specialist clinic
+     * @param {string} slotId id of time slot
+     * @param {TimeSlot} timeSlot 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SpecialistBookingApiInterface
+     */
+    updateTimeSlotRaw(requestParameters: UpdateTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TimeSlot>>;
+
+    /**
+     * Updates time slot
+     */
+    updateTimeSlot(requestParameters: UpdateTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TimeSlot>;
 
 }
 
@@ -80,7 +250,180 @@ export interface SpecialistBookingApiInterface {
 export class SpecialistBookingApi extends runtime.BaseAPI implements SpecialistBookingApiInterface {
 
     /**
-     * By using clinicId you get list of appointments for a specialist clinic
+     * Creates appointment in selected clinic
+     */
+    async createAppointmentRaw(requestParameters: CreateAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Appointment>> {
+        if (requestParameters.clinicId === null || requestParameters.clinicId === undefined) {
+            throw new runtime.RequiredError('clinicId','Required parameter requestParameters.clinicId was null or undefined when calling createAppointment.');
+        }
+
+        if (requestParameters.appointment === null || requestParameters.appointment === undefined) {
+            throw new runtime.RequiredError('appointment','Required parameter requestParameters.appointment was null or undefined when calling createAppointment.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/specialist-booking/{clinicId}/appointments`.replace(`{${"clinicId"}}`, encodeURIComponent(String(requestParameters.clinicId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: AppointmentToJSON(requestParameters.appointment),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AppointmentFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates appointment in selected clinic
+     */
+    async createAppointment(requestParameters: CreateAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Appointment> {
+        const response = await this.createAppointmentRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Creates time slot for selected clinic
+     */
+    async createTimeSlotRaw(requestParameters: CreateTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TimeSlot>> {
+        if (requestParameters.clinicId === null || requestParameters.clinicId === undefined) {
+            throw new runtime.RequiredError('clinicId','Required parameter requestParameters.clinicId was null or undefined when calling createTimeSlot.');
+        }
+
+        if (requestParameters.timeSlot === null || requestParameters.timeSlot === undefined) {
+            throw new runtime.RequiredError('timeSlot','Required parameter requestParameters.timeSlot was null or undefined when calling createTimeSlot.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/specialist-booking/{clinicId}/time-slots`.replace(`{${"clinicId"}}`, encodeURIComponent(String(requestParameters.clinicId))),
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TimeSlotToJSON(requestParameters.timeSlot),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TimeSlotFromJSON(jsonValue));
+    }
+
+    /**
+     * Creates time slot for selected clinic
+     */
+    async createTimeSlot(requestParameters: CreateTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TimeSlot> {
+        const response = await this.createTimeSlotRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Cancels appointment
+     */
+    async deleteAppointmentRaw(requestParameters: DeleteAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.clinicId === null || requestParameters.clinicId === undefined) {
+            throw new runtime.RequiredError('clinicId','Required parameter requestParameters.clinicId was null or undefined when calling deleteAppointment.');
+        }
+
+        if (requestParameters.appointmentId === null || requestParameters.appointmentId === undefined) {
+            throw new runtime.RequiredError('appointmentId','Required parameter requestParameters.appointmentId was null or undefined when calling deleteAppointment.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/specialist-booking/{clinicId}/appointments/{appointmentId}`.replace(`{${"clinicId"}}`, encodeURIComponent(String(requestParameters.clinicId))).replace(`{${"appointmentId"}}`, encodeURIComponent(String(requestParameters.appointmentId))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Cancels appointment
+     */
+    async deleteAppointment(requestParameters: DeleteAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteAppointmentRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Deletes time slot
+     */
+    async deleteTimeSlotRaw(requestParameters: DeleteTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters.clinicId === null || requestParameters.clinicId === undefined) {
+            throw new runtime.RequiredError('clinicId','Required parameter requestParameters.clinicId was null or undefined when calling deleteTimeSlot.');
+        }
+
+        if (requestParameters.slotId === null || requestParameters.slotId === undefined) {
+            throw new runtime.RequiredError('slotId','Required parameter requestParameters.slotId was null or undefined when calling deleteTimeSlot.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/specialist-booking/{clinicId}/time-slots/{slotId}`.replace(`{${"clinicId"}}`, encodeURIComponent(String(requestParameters.clinicId))).replace(`{${"slotId"}}`, encodeURIComponent(String(requestParameters.slotId))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Deletes time slot
+     */
+    async deleteTimeSlot(requestParameters: DeleteTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteTimeSlotRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Provides appointment detail
+     */
+    async getAppointmentRaw(requestParameters: GetAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Appointment>> {
+        if (requestParameters.clinicId === null || requestParameters.clinicId === undefined) {
+            throw new runtime.RequiredError('clinicId','Required parameter requestParameters.clinicId was null or undefined when calling getAppointment.');
+        }
+
+        if (requestParameters.appointmentId === null || requestParameters.appointmentId === undefined) {
+            throw new runtime.RequiredError('appointmentId','Required parameter requestParameters.appointmentId was null or undefined when calling getAppointment.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/specialist-booking/{clinicId}/appointments/{appointmentId}`.replace(`{${"clinicId"}}`, encodeURIComponent(String(requestParameters.clinicId))).replace(`{${"appointmentId"}}`, encodeURIComponent(String(requestParameters.appointmentId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AppointmentFromJSON(jsonValue));
+    }
+
+    /**
+     * Provides appointment detail
+     */
+    async getAppointment(requestParameters: GetAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Appointment> {
+        const response = await this.getAppointmentRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Provides appointments for selected clinic
      */
     async getAppointmentsRaw(requestParameters: GetAppointmentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<Appointment>>> {
@@ -103,7 +446,6 @@ export class SpecialistBookingApi extends runtime.BaseAPI implements SpecialistB
     }
 
     /**
-     * By using clinicId you get list of appointments for a specialist clinic
      * Provides appointments for selected clinic
      */
     async getAppointments(requestParameters: GetAppointmentsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<Appointment>> {
@@ -112,7 +454,40 @@ export class SpecialistBookingApi extends runtime.BaseAPI implements SpecialistB
     }
 
     /**
-     * By using clinicId you get list of configured time slots
+     * Provides time slot detail
+     */
+    async getTimeSlotRaw(requestParameters: GetTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TimeSlot>> {
+        if (requestParameters.clinicId === null || requestParameters.clinicId === undefined) {
+            throw new runtime.RequiredError('clinicId','Required parameter requestParameters.clinicId was null or undefined when calling getTimeSlot.');
+        }
+
+        if (requestParameters.slotId === null || requestParameters.slotId === undefined) {
+            throw new runtime.RequiredError('slotId','Required parameter requestParameters.slotId was null or undefined when calling getTimeSlot.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/specialist-booking/{clinicId}/time-slots/{slotId}`.replace(`{${"clinicId"}}`, encodeURIComponent(String(requestParameters.clinicId))).replace(`{${"slotId"}}`, encodeURIComponent(String(requestParameters.slotId))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TimeSlotFromJSON(jsonValue));
+    }
+
+    /**
+     * Provides time slot detail
+     */
+    async getTimeSlot(requestParameters: GetTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TimeSlot> {
+        const response = await this.getTimeSlotRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
      * Provides available time slots for selected clinic
      */
     async getTimeSlotsRaw(requestParameters: GetTimeSlotsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<TimeSlot>>> {
@@ -135,11 +510,92 @@ export class SpecialistBookingApi extends runtime.BaseAPI implements SpecialistB
     }
 
     /**
-     * By using clinicId you get list of configured time slots
      * Provides available time slots for selected clinic
      */
     async getTimeSlots(requestParameters: GetTimeSlotsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<TimeSlot>> {
         const response = await this.getTimeSlotsRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Updates appointment
+     */
+    async updateAppointmentRaw(requestParameters: UpdateAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Appointment>> {
+        if (requestParameters.clinicId === null || requestParameters.clinicId === undefined) {
+            throw new runtime.RequiredError('clinicId','Required parameter requestParameters.clinicId was null or undefined when calling updateAppointment.');
+        }
+
+        if (requestParameters.appointmentId === null || requestParameters.appointmentId === undefined) {
+            throw new runtime.RequiredError('appointmentId','Required parameter requestParameters.appointmentId was null or undefined when calling updateAppointment.');
+        }
+
+        if (requestParameters.appointment === null || requestParameters.appointment === undefined) {
+            throw new runtime.RequiredError('appointment','Required parameter requestParameters.appointment was null or undefined when calling updateAppointment.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/specialist-booking/{clinicId}/appointments/{appointmentId}`.replace(`{${"clinicId"}}`, encodeURIComponent(String(requestParameters.clinicId))).replace(`{${"appointmentId"}}`, encodeURIComponent(String(requestParameters.appointmentId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: AppointmentToJSON(requestParameters.appointment),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => AppointmentFromJSON(jsonValue));
+    }
+
+    /**
+     * Updates appointment
+     */
+    async updateAppointment(requestParameters: UpdateAppointmentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Appointment> {
+        const response = await this.updateAppointmentRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Updates time slot
+     */
+    async updateTimeSlotRaw(requestParameters: UpdateTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TimeSlot>> {
+        if (requestParameters.clinicId === null || requestParameters.clinicId === undefined) {
+            throw new runtime.RequiredError('clinicId','Required parameter requestParameters.clinicId was null or undefined when calling updateTimeSlot.');
+        }
+
+        if (requestParameters.slotId === null || requestParameters.slotId === undefined) {
+            throw new runtime.RequiredError('slotId','Required parameter requestParameters.slotId was null or undefined when calling updateTimeSlot.');
+        }
+
+        if (requestParameters.timeSlot === null || requestParameters.timeSlot === undefined) {
+            throw new runtime.RequiredError('timeSlot','Required parameter requestParameters.timeSlot was null or undefined when calling updateTimeSlot.');
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/specialist-booking/{clinicId}/time-slots/{slotId}`.replace(`{${"clinicId"}}`, encodeURIComponent(String(requestParameters.clinicId))).replace(`{${"slotId"}}`, encodeURIComponent(String(requestParameters.slotId))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: TimeSlotToJSON(requestParameters.timeSlot),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => TimeSlotFromJSON(jsonValue));
+    }
+
+    /**
+     * Updates time slot
+     */
+    async updateTimeSlot(requestParameters: UpdateTimeSlotRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TimeSlot> {
+        const response = await this.updateTimeSlotRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

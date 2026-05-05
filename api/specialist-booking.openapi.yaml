@@ -20,14 +20,8 @@ paths:
       tags: [specialistBooking]
       summary: Provides appointments for selected clinic
       operationId: getAppointments
-      description: By using clinicId you get list of appointments for a specialist clinic
       parameters:
-        - in: path
-          name: clinicId
-          description: pass the id of the specialist clinic
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/ClinicId'
       responses:
         '200':
           description: value of appointments
@@ -42,19 +36,85 @@ paths:
                   $ref: '#/components/examples/AppointmentsExample'
         '404':
           description: Clinic with such ID does not exist
+    post:
+      tags: [specialistBooking]
+      summary: Creates appointment in selected clinic
+      operationId: createAppointment
+      parameters:
+        - $ref: '#/components/parameters/ClinicId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Appointment'
+      responses:
+        '201':
+          description: created appointment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '400':
+          description: Invalid appointment input
+  '/specialist-booking/{clinicId}/appointments/{appointmentId}':
+    get:
+      tags: [specialistBooking]
+      summary: Provides appointment detail
+      operationId: getAppointment
+      parameters:
+        - $ref: '#/components/parameters/ClinicId'
+        - $ref: '#/components/parameters/AppointmentId'
+      responses:
+        '200':
+          description: appointment detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '404':
+          description: Appointment with such ID does not exist
+    put:
+      tags: [specialistBooking]
+      summary: Updates appointment
+      operationId: updateAppointment
+      parameters:
+        - $ref: '#/components/parameters/ClinicId'
+        - $ref: '#/components/parameters/AppointmentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Appointment'
+      responses:
+        '200':
+          description: updated appointment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Appointment'
+        '404':
+          description: Appointment with such ID does not exist
+    delete:
+      tags: [specialistBooking]
+      summary: Cancels appointment
+      operationId: deleteAppointment
+      parameters:
+        - $ref: '#/components/parameters/ClinicId'
+        - $ref: '#/components/parameters/AppointmentId'
+      responses:
+        '204':
+          description: appointment cancelled
+        '404':
+          description: Appointment with such ID does not exist
   '/specialist-booking/{clinicId}/time-slots':
     get:
       tags: [specialistBooking]
       summary: Provides available time slots for selected clinic
       operationId: getTimeSlots
-      description: By using clinicId you get list of configured time slots
       parameters:
-        - in: path
-          name: clinicId
-          description: pass the id of the specialist clinic
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/ClinicId'
       responses:
         '200':
           description: value of time slots
@@ -69,7 +129,101 @@ paths:
                   $ref: '#/components/examples/TimeSlotsExample'
         '404':
           description: Clinic with such ID does not exist
+    post:
+      tags: [specialistBooking]
+      summary: Creates time slot for selected clinic
+      operationId: createTimeSlot
+      parameters:
+        - $ref: '#/components/parameters/ClinicId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeSlot'
+      responses:
+        '201':
+          description: created time slot
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSlot'
+        '400':
+          description: Invalid time slot input
+  '/specialist-booking/{clinicId}/time-slots/{slotId}':
+    get:
+      tags: [specialistBooking]
+      summary: Provides time slot detail
+      operationId: getTimeSlot
+      parameters:
+        - $ref: '#/components/parameters/ClinicId'
+        - $ref: '#/components/parameters/SlotId'
+      responses:
+        '200':
+          description: time slot detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSlot'
+        '404':
+          description: Time slot with such ID does not exist
+    put:
+      tags: [specialistBooking]
+      summary: Updates time slot
+      operationId: updateTimeSlot
+      parameters:
+        - $ref: '#/components/parameters/ClinicId'
+        - $ref: '#/components/parameters/SlotId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeSlot'
+      responses:
+        '200':
+          description: updated time slot
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeSlot'
+        '404':
+          description: Time slot with such ID does not exist
+    delete:
+      tags: [specialistBooking]
+      summary: Deletes time slot
+      operationId: deleteTimeSlot
+      parameters:
+        - $ref: '#/components/parameters/ClinicId'
+        - $ref: '#/components/parameters/SlotId'
+      responses:
+        '204':
+          description: time slot deleted
+        '404':
+          description: Time slot with such ID does not exist
 components:
+  parameters:
+    ClinicId:
+      in: path
+      name: clinicId
+      description: id of the specialist clinic
+      required: true
+      schema:
+        type: string
+    AppointmentId:
+      in: path
+      name: appointmentId
+      description: id of appointment
+      required: true
+      schema:
+        type: string
+    SlotId:
+      in: path
+      name: slotId
+      description: id of time slot
+      required: true
+      schema:
+        type: string
   schemas:
     Appointment:
       type: object
@@ -78,39 +232,36 @@ components:
         id:
           type: string
           example: apt-001
-          description: Unique id of appointment
         patientId:
           type: string
           example: 460527-jozef-pucik
-          description: Unique identifier of the patient known to Web-In-Cloud system
         patientName:
           type: string
           example: Jožko Púčik
-          description: Name of patient for this appointment
+        patientEmail:
+          type: string
+          format: email
+          example: pacient@example.com
+        referringDoctor:
+          type: string
+          example: MUDr. Kováč
         startsAt:
           type: string
           format: date-time
           example: '2038-12-24T10:35:00Z'
-          description: Scheduled start timestamp
         durationMinutes:
           type: integer
           format: int32
           example: 30
-          description: Duration of appointment in minutes
         examinationType:
           type: string
           example: Kardiologické vyšetrenie
-          description: Requested examination type
         status:
           type: string
           example: confirmed
-          description: Workflow state of appointment
         note:
           type: string
           example: Kontrola po zákroku
-          description: Optional note
-      example:
-        $ref: '#/components/examples/AppointmentExample'
     TimeSlot:
       type: object
       required: [id, startsAt, durationMinutes, capacity, booked, examinationType, urgentBlocked]
@@ -118,53 +269,35 @@ components:
         id:
           type: string
           example: slot-001
-          description: Unique id of time slot
         startsAt:
           type: string
           format: date-time
           example: '2038-12-24T11:00:00Z'
-          description: Slot start timestamp
         durationMinutes:
           type: integer
           format: int32
           example: 30
-          description: Slot duration in minutes
         capacity:
           type: integer
           format: int32
           example: 2
-          description: Maximum number of appointments in slot
         booked:
           type: integer
           format: int32
           example: 1
-          description: Number of occupied places in slot
         examinationType:
           type: string
           example: Neurologická konzultácia
-          description: Supported examination type for slot
         urgentBlocked:
           type: boolean
           example: false
-          description: Whether slot is blocked for urgent use
-      example:
-        $ref: '#/components/examples/TimeSlotExample'
   examples:
-    AppointmentExample:
-      value:
-        id: apt-001
-        patientId: 460527-jozef-pucik
-        patientName: Jožko Púčik
-        startsAt: '2038-12-24T10:35:00.000Z'
-        durationMinutes: 30
-        examinationType: Kardiologické vyšetrenie
-        status: confirmed
-        note: Kontrola po zákroku
     AppointmentsExample:
       value:
         - id: apt-001
           patientId: 460527-jozef-pucik
           patientName: Jožko Púčik
+          patientEmail: pacient@example.com
           startsAt: '2038-12-24T10:35:00.000Z'
           durationMinutes: 30
           examinationType: Kardiologické vyšetrenie
@@ -172,19 +305,11 @@ components:
         - id: apt-002
           patientId: 780907-ferdinand-tre
           patientName: Ferdinand Trety
+          patientEmail: druhy@example.com
           startsAt: '2038-12-24T11:20:00.000Z'
           durationMinutes: 45
           examinationType: Neurologická konzultácia
           status: requested
-    TimeSlotExample:
-      value:
-        id: slot-001
-        startsAt: '2038-12-24T11:00:00.000Z'
-        durationMinutes: 30
-        capacity: 2
-        booked: 1
-        examinationType: Neurologická konzultácia
-        urgentBlocked: false
     TimeSlotsExample:
       value:
         - id: slot-001

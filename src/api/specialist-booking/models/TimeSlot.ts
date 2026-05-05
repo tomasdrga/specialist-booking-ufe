@@ -20,43 +20,43 @@ import { exists, mapValues } from '../runtime';
  */
 export interface TimeSlot {
     /**
-     * Unique id of time slot
+     * 
      * @type {string}
      * @memberof TimeSlot
      */
     id: string;
     /**
-     * Slot start timestamp
+     * 
      * @type {Date}
      * @memberof TimeSlot
      */
     startsAt: Date;
     /**
-     * Slot duration in minutes
+     * 
      * @type {number}
      * @memberof TimeSlot
      */
     durationMinutes: number;
     /**
-     * Maximum number of appointments in slot
+     * 
      * @type {number}
      * @memberof TimeSlot
      */
     capacity: number;
     /**
-     * Number of occupied places in slot
+     * 
      * @type {number}
      * @memberof TimeSlot
      */
     booked: number;
     /**
-     * Supported examination type for slot
+     * 
      * @type {string}
      * @memberof TimeSlot
      */
     examinationType: string;
     /**
-     * Whether slot is blocked for urgent use
+     * 
      * @type {boolean}
      * @memberof TimeSlot
      */
