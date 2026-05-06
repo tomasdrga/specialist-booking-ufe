@@ -31,9 +31,9 @@ export class SpecialistBookingAppointmentList {
       if (response.raw.status < 299) {
         return await response.value();
       }
-      this.errorMessage = `Cannot retrieve appointments: ${response.raw.statusText}`;
+      this.errorMessage = `Nepodarilo sa načítať objednávky: ${response.raw.statusText}`;
     } catch (err: any) {
-      this.errorMessage = `Cannot retrieve appointments: ${err.message || 'unknown'}`;
+      this.errorMessage = `Nepodarilo sa načítať objednávky: ${err.message || 'neznáma chyba'}`;
     }
     return [];
   }
@@ -44,9 +44,9 @@ export class SpecialistBookingAppointmentList {
       if (response.raw.status < 299) {
         return await response.value();
       }
-      this.errorMessage = `Cannot retrieve time slots: ${response.raw.statusText}`;
+      this.errorMessage = `Nepodarilo sa načítať termíny: ${response.raw.statusText}`;
     } catch (err: any) {
-      this.errorMessage = `Cannot retrieve time slots: ${err.message || 'unknown'}`;
+      this.errorMessage = `Nepodarilo sa načítať termíny: ${err.message || 'neznáma chyba'}`;
     }
     return [];
   }
@@ -76,7 +76,7 @@ export class SpecialistBookingAppointmentList {
               <div class="panel-heading">
                 <span class="icon-badge"><md-icon>event_available</md-icon></span>
                 <div>
-                  <p class="label">Appointment CRUD</p>
+                  <p class="label">Správa objednávok</p>
                   <h2>Najbližšie objednávky</h2>
                 </div>
               </div>
@@ -99,7 +99,7 @@ export class SpecialistBookingAppointmentList {
               <div class="panel-heading">
                 <span class="icon-badge"><md-icon>calendar_month</md-icon></span>
                 <div>
-                  <p class="label">Time Slot CRUD</p>
+                  <p class="label">Správa termínov</p>
                   <h2>Kapacita termínov</h2>
                 </div>
               </div>

@@ -47,9 +47,9 @@ export class SpecialistBookingAppointmentEditor {
       if (response.raw.status < 299) {
         return await response.value();
       }
-      this.errorMessage = `Cannot retrieve appointment: ${response.raw.statusText}`;
+      this.errorMessage = `Nepodarilo sa načítať objednávku: ${response.raw.statusText}`;
     } catch (err: any) {
-      this.errorMessage = `Cannot retrieve appointment: ${err.message || 'unknown'}`;
+      this.errorMessage = `Nepodarilo sa načítať objednávku: ${err.message || 'neznáma chyba'}`;
     }
     return undefined;
   }
@@ -88,10 +88,10 @@ export class SpecialistBookingAppointmentEditor {
       if (response.raw.status < 299) {
         this.editorClosed.emit('store');
       } else {
-        this.errorMessage = `Cannot store appointment: ${response.raw.statusText}`;
+        this.errorMessage = `Nepodarilo sa uložiť objednávku: ${response.raw.statusText}`;
       }
     } catch (err: any) {
-      this.errorMessage = `Cannot store appointment: ${err.message || 'unknown'}`;
+      this.errorMessage = `Nepodarilo sa uložiť objednávku: ${err.message || 'neznáma chyba'}`;
     }
   }
 
@@ -106,10 +106,10 @@ export class SpecialistBookingAppointmentEditor {
       if (response.raw.status < 299) {
         this.editorClosed.emit('delete');
       } else {
-        this.errorMessage = `Cannot cancel appointment: ${response.raw.statusText}`;
+        this.errorMessage = `Nepodarilo sa zrušiť objednávku: ${response.raw.statusText}`;
       }
     } catch (err: any) {
-      this.errorMessage = `Cannot cancel appointment: ${err.message || 'unknown'}`;
+      this.errorMessage = `Nepodarilo sa zrušiť objednávku: ${err.message || 'neznáma chyba'}`;
     }
   }
 

@@ -48,9 +48,9 @@ export class SpecialistBookingSlotEditor {
       if (response.raw.status < 299) {
         return await response.value();
       }
-      this.errorMessage = `Cannot retrieve time slot: ${response.raw.statusText}`;
+      this.errorMessage = `Nepodarilo sa načítať termín: ${response.raw.statusText}`;
     } catch (err: any) {
-      this.errorMessage = `Cannot retrieve time slot: ${err.message || 'unknown'}`;
+      this.errorMessage = `Nepodarilo sa načítať termín: ${err.message || 'neznáma chyba'}`;
     }
     return undefined;
   }
@@ -80,10 +80,10 @@ export class SpecialistBookingSlotEditor {
       if (response.raw.status < 299) {
         this.editorClosed.emit('store');
       } else {
-        this.errorMessage = `Cannot store time slot: ${response.raw.statusText}`;
+        this.errorMessage = `Nepodarilo sa uložiť termín: ${response.raw.statusText}`;
       }
     } catch (err: any) {
-      this.errorMessage = `Cannot store time slot: ${err.message || 'unknown'}`;
+      this.errorMessage = `Nepodarilo sa uložiť termín: ${err.message || 'neznáma chyba'}`;
     }
   }
 
@@ -98,10 +98,10 @@ export class SpecialistBookingSlotEditor {
       if (response.raw.status < 299) {
         this.editorClosed.emit('delete');
       } else {
-        this.errorMessage = `Cannot delete time slot: ${response.raw.statusText}`;
+        this.errorMessage = `Nepodarilo sa zmazať termín: ${response.raw.statusText}`;
       }
     } catch (err: any) {
-      this.errorMessage = `Cannot delete time slot: ${err.message || 'unknown'}`;
+      this.errorMessage = `Nepodarilo sa zmazať termín: ${err.message || 'neznáma chyba'}`;
     }
   }
 

@@ -31,9 +31,9 @@ export class SpecialistBookingSlotCalendar {
       if (response.raw.status < 299) {
         return await response.value();
       }
-      this.errorMessage = `Cannot retrieve time slots: ${response.raw.statusText}`;
+      this.errorMessage = `Nepodarilo sa načítať termíny: ${response.raw.statusText}`;
     } catch (err: any) {
-      this.errorMessage = `Cannot retrieve time slots: ${err.message || 'unknown'}`;
+      this.errorMessage = `Nepodarilo sa načítať termíny: ${err.message || 'neznáma chyba'}`;
     }
     return [];
   }
