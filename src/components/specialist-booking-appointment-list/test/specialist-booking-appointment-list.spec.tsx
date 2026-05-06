@@ -56,7 +56,7 @@ describe('specialist-booking-appointment-list', () => {
     const appointmentList = page.rootInstance as SpecialistBookingAppointmentList;
     await page.waitForChanges();
 
-    const items = page.root.shadowRoot.querySelectorAll('md-list-item');
+    const items = page.root.shadowRoot.querySelectorAll('.appointment-row');
     expect(appointmentList?.appointments?.length).toEqual(sampleAppointments.length);
     expect(items.length).toEqual(sampleAppointments.length);
   });
@@ -72,7 +72,7 @@ describe('specialist-booking-appointment-list', () => {
     await page.waitForChanges();
 
     const errorMessage = page.root.shadowRoot.querySelectorAll('.error');
-    const items = page.root.shadowRoot.querySelectorAll('md-list-item');
+    const items = page.root.shadowRoot.querySelectorAll('.appointment-row');
     expect(errorMessage.length).toBeGreaterThanOrEqual(1);
     expect(items.length).toEqual(0);
   });
