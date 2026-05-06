@@ -75,7 +75,7 @@ export class SpecialistBookingSlotCalendar {
                     <button class={{ slot: true, full, blocked: slot.urgentBlocked }} onClick={() => this.slotClicked.emit(slot.id)}>
                       <span class="time">{slot.startsAt.toLocaleTimeString('sk-SK', { hour: '2-digit', minute: '2-digit' })}</span>
                       <span class="type">{slot.examinationType}</span>
-                      <span class="capacity">{slot.urgentBlocked ? 'Urgent blok' : `${slot.booked}/${slot.capacity} obsadené · ${slot.durationMinutes} min`}</span>
+                      <span class="capacity">{slot.urgentBlocked ? 'Blokované pre urgentný prípad' : `${slot.booked}/${slot.capacity} obsadené · ${slot.durationMinutes} min`}</span>
                     </button>
                   );
                 })}

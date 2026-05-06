@@ -1,7 +1,6 @@
 :host {
   display: block;
   width: 100%;
-  height: 100%;
   min-height: 100vh;
   padding: 2rem;
   box-sizing: border-box;
@@ -9,6 +8,14 @@
   background:
     radial-gradient(circle at top left, rgba(14, 165, 233, 0.28), transparent 32rem),
     linear-gradient(135deg, #f8fafc 0%, #ecfeff 48%, #f1f5f9 100%);
+
+  --md-filled-button-container-color: #0d9488;
+  --md-filled-button-hover-container-color: #0f766e;
+  --md-filled-button-label-text-color: #ffffff;
+  --md-outlined-button-label-text-color: #0d9488;
+  --md-outlined-button-outline-color: #0d9488;
+  --md-outlined-button-hover-label-text-color: #0f766e;
+  --md-outlined-button-hover-outline-color: #0f766e;
 }
 
 .hero {
@@ -22,9 +29,29 @@
 }
 
 .hero-actions {
+  flex-shrink: 0;
+}
+
+.hero-cta {
   display: flex;
-  gap: 0.6rem;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.hero-cta:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
 }
 
 .eyebrow,
@@ -50,20 +77,13 @@ h1 {
   letter-spacing: -0.055em;
 }
 
-.lead {
-  max-width: 680px;
-  margin: 1rem 0 0;
-  color: #475569;
-  font-size: 1.05rem;
-  line-height: 1.65;
-}
-
 .layout {
   max-width: 980px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.18fr 0.82fr;
   gap: 1rem;
+  align-items: start;
 }
 
 .panel {
@@ -97,20 +117,112 @@ h1 {
   background: linear-gradient(135deg, #0f766e, #0284c7);
 }
 
-md-list {
-  border-radius: 22px;
+.stats-row {
+  max-width: 980px;
+  margin: 0 auto 1.25rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.86);
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-left: 4px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  backdrop-filter: blur(18px);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
+}
+
+.stat-card.stat-confirmed { border-left-color: #0d9488; }
+.stat-card.stat-pending   { border-left-color: #f59e0b; }
+.stat-card.stat-slots     { border-left-color: #38bdf8; }
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: #0f172a;
+}
+
+.stat-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.appointment-list {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
   overflow: hidden;
   background: #f8fafc;
+}
+
+.appointment-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.appointment-row:not(:last-child) {
+  border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.appointment-row:hover {
+  background: #e0f2fe;
+}
+
+.row-icon {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.row-text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.row-name {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row-detail {
+  font-size: 0.82rem;
+  color: #475569;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .status {
   border-radius: 999px;
   padding: 0.25rem 0.6rem;
-  color: #075985;
-  background: #e0f2fe;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 500;
+  white-space: nowrap;
 }
+
+.status.requested { color: #92400e; background: #fef3c7; }
+.status.confirmed { color: #065f46; background: #d1fae5; }
+.status.completed { color: #374151; background: #f3f4f6; }
+.status.cancelled { color: #991b1b; background: #fee2e2; }
 
 .slot-grid {
   display: grid;
@@ -141,6 +253,34 @@ md-list {
 .slot.blocked {
   border-color: #fecaca;
   background: #fef2f2;
+}
+
+.panel-footer {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.footer-link {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  width: 100%;
+  padding: 0.5rem 0.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #0d9488;
+  font-size: 0.88rem;
+  font-weight: 700;
+  font-family: inherit;
+  transition: color 0.15s ease, gap 0.15s ease;
+}
+
+.footer-link:hover {
+  color: #0f766e;
+  gap: 0.55rem;
 }
 
 .error {
