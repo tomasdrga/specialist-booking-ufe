@@ -5,6 +5,8 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
+import { TimeSlot } from "./api/specialist-booking";
+export { TimeSlot } from "./api/specialist-booking";
 export namespace Components {
     interface SpecialistBookingApp {
         "apiBase": string;
@@ -18,10 +20,18 @@ export namespace Components {
         "apiBase": string;
         "appointmentId": string;
         "clinicId": string;
+        /**
+          * @default null
+         */
+        "prefillSlot": TimeSlot | null;
     }
     interface SpecialistBookingAppointmentList {
         "apiBase": string;
         "clinicId": string;
+        /**
+          * @default 'patient'
+         */
+        "role": 'patient' | 'doctor';
     }
     interface SpecialistBookingSlotCalendar {
         "apiBase": string;
@@ -76,6 +86,7 @@ declare global {
     interface HTMLSpecialistBookingAppointmentListElementEventMap {
         "entry-clicked": string;
         "slots-opened": string;
+        "slot-booking-requested": TimeSlot;
     }
     interface HTMLSpecialistBookingAppointmentListElement extends Components.SpecialistBookingAppointmentList, HTMLStencilElement {
         addEventListener<K extends keyof HTMLSpecialistBookingAppointmentListElementEventMap>(type: K, listener: (this: HTMLSpecialistBookingAppointmentListElement, ev: SpecialistBookingAppointmentListCustomEvent<HTMLSpecialistBookingAppointmentListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -149,12 +160,21 @@ declare namespace LocalJSX {
         "appointmentId"?: string;
         "clinicId"?: string;
         "onEditor-closed"?: (event: SpecialistBookingAppointmentEditorCustomEvent<string>) => void;
+        /**
+          * @default null
+         */
+        "prefillSlot"?: TimeSlot | null;
     }
     interface SpecialistBookingAppointmentList {
         "apiBase"?: string;
         "clinicId"?: string;
         "onEntry-clicked"?: (event: SpecialistBookingAppointmentListCustomEvent<string>) => void;
+        "onSlot-booking-requested"?: (event: SpecialistBookingAppointmentListCustomEvent<TimeSlot>) => void;
         "onSlots-opened"?: (event: SpecialistBookingAppointmentListCustomEvent<string>) => void;
+        /**
+          * @default 'patient'
+         */
+        "role"?: 'patient' | 'doctor';
     }
     interface SpecialistBookingSlotCalendar {
         "apiBase"?: string;
@@ -183,6 +203,7 @@ declare namespace LocalJSX {
     interface SpecialistBookingAppointmentListAttributes {
         "apiBase": string;
         "clinicId": string;
+        "role": 'patient' | 'doctor';
     }
     interface SpecialistBookingSlotCalendarAttributes {
         "apiBase": string;

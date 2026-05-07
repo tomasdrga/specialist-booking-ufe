@@ -86,6 +86,56 @@ form {
   gap: 0.85rem;
 }
 
+.datetime-field {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: #ffffff;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 2px solid #94a3b8;
+  transition: border-color 0.15s ease;
+}
+
+.datetime-field:focus-within {
+  border-bottom-color: #0d9488;
+}
+
+.datetime-field md-icon {
+  color: #64748b;
+  flex-shrink: 0;
+}
+
+.datetime-inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.1rem;
+}
+
+.datetime-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #0d9488;
+  letter-spacing: 0.01em;
+}
+
+.datetime-field:not(:focus-within) .datetime-label {
+  color: #64748b;
+}
+
+.datetime-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #0f172a;
+  padding: 0;
+  width: 100%;
+  cursor: pointer;
+}
+
 .pills-section {
   display: flex;
   flex-direction: column;

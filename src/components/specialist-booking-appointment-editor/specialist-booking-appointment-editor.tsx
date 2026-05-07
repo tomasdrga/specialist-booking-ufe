@@ -1,5 +1,5 @@
 import { Component, Event, EventEmitter, Host, Prop, State, h } from '@stencil/core';
-import { Appointment, Configuration, SpecialistBookingApi } from '../../api/specialist-booking';
+import { Appointment, Configuration, SpecialistBookingApi, TimeSlot } from '../../api/specialist-booking';
 
 @Component({
   tag: 'specialist-booking-appointment-editor',
@@ -10,6 +10,7 @@ export class SpecialistBookingAppointmentEditor {
   @Prop() appointmentId: string;
   @Prop() apiBase: string;
   @Prop() clinicId: string;
+  @Prop() prefillSlot: TimeSlot | null = null;
 
   @Event({ eventName: 'editor-closed' }) editorClosed: EventEmitter<string>;
 
@@ -22,7 +23,7 @@ export class SpecialistBookingAppointmentEditor {
 
   async componentWillLoad() {
     this.appointment = await this.getAppointmentAsync();
-    this.duration = this.appointment?.durationMinutes || 30;
+    this.duration = this.appointment?.durationMinutes ?? this.prefillSlot?.durationMinutes ?? 30;
   }
 
   private api() {
@@ -36,9 +37,9 @@ export class SpecialistBookingAppointmentEditor {
         patientId: '',
         patientName: '',
         patientEmail: '',
-        startsAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-        durationMinutes: 30,
-        examinationType: 'Kardiologické vyšetrenie',
+        startsAt: this.prefillSlot?.startsAt ?? new Date(Date.now() + 24 * 60 * 60 * 1000),
+        durationMinutes: this.prefillSlot?.durationMinutes ?? 30,
+        examinationType: this.prefillSlot?.examinationType ?? 'Kardiologické vyšetrenie',
         status: 'requested',
       };
     }
@@ -134,10 +135,17 @@ export class SpecialistBookingAppointmentEditor {
               <md-icon slot="leading-icon">mail</md-icon>
             </md-filled-text-field>
 
-            <md-filled-text-field label="Odosielajúci lekár" value={this.appointment?.referringDoctor}
+            <md-filled-select label="Odosielajúci lekár" value={this.appointment?.referringDoctor ?? ''}
+              style={{"--md-filled-select-container-color": "#ffffff", "--md-sys-color-surface-container-highest": "#ffffff", "--md-sys-color-primary": "#0d9488", "--md-sys-color-secondary-container": "#f0fdfa", "--md-filled-select-hover-state-layer-opacity": "0", "--md-filled-select-focus-state-layer-opacity": "0"} as any}
               oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.referringDoctor = this.handleInputEvent(ev); }}>
               <md-icon slot="leading-icon">medical_services</md-icon>
-            </md-filled-text-field>
+              <md-select-option value=""><div slot="headline">— bez odosielajúceho lekára —</div></md-select-option>
+              <md-select-option value="MUDr. Jana Kováčová"><div slot="headline">MUDr. Jana Kováčová</div></md-select-option>
+              <md-select-option value="MUDr. Peter Novák"><div slot="headline">MUDr. Peter Novák</div></md-select-option>
+              <md-select-option value="MUDr. Mária Horváthová"><div slot="headline">MUDr. Mária Horváthová</div></md-select-option>
+              <md-select-option value="MUDr. Tomáš Blaho"><div slot="headline">MUDr. Tomáš Blaho</div></md-select-option>
+              <md-select-option value="MUDr. Eva Bartošová"><div slot="headline">MUDr. Eva Bartošová</div></md-select-option>
+            </md-filled-select>
 
             <md-filled-select label="Typ vyšetrenia" value={this.appointment?.examinationType}
               style={{"--md-filled-select-container-color": "#ffffff", "--md-sys-color-surface-container-highest": "#ffffff", "--md-sys-color-primary": "#0d9488", "--md-sys-color-secondary-container": "#f0fdfa", "--md-filled-select-hover-state-layer-opacity": "0", "--md-filled-select-focus-state-layer-opacity": "0"} as any}

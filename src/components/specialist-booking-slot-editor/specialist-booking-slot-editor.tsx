@@ -71,6 +71,12 @@ export class SpecialistBookingSlotEditor {
     return (event.target as HTMLInputElement).value;
   }
 
+  private toDatetimeLocal(date?: Date): string {
+    if (!date) return '';
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
+
   private async updateSlot() {
     if (!this.validateForm()) return;
 
@@ -138,10 +144,19 @@ export class SpecialistBookingSlotEditor {
 
         <div class="card">
           <form ref={el => (this.formElement = el)}>
-            <md-filled-text-field label="Začiatok termínu" required value={this.slot?.startsAt?.toISOString()}
-              oninput={(ev: InputEvent) => { if (this.slot) this.slot.startsAt = new Date(this.value(ev)); }}>
-              <md-icon slot="leading-icon">schedule</md-icon>
-            </md-filled-text-field>
+            <div class="datetime-field">
+              <md-icon>schedule</md-icon>
+              <div class="datetime-inner">
+                <span class="datetime-label">Začiatok termínu *</span>
+                <input
+                  type="datetime-local"
+                  class="datetime-input"
+                  value={this.toDatetimeLocal(this.slot?.startsAt)}
+                  onInput={(ev: InputEvent) => { if (this.slot) this.slot.startsAt = new Date((ev.target as HTMLInputElement).value); }}
+                  required
+                />
+              </div>
+            </div>
 
             <md-filled-select label="Typ vyšetrenia" value={this.slot?.examinationType}
               style={selectStyle}

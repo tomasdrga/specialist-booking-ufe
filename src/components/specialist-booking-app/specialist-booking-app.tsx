@@ -1,4 +1,5 @@
 import { Component, Host, Prop, State, h } from '@stencil/core';
+import { TimeSlot } from '../../api/specialist-booking';
 
 declare global {
   interface Window {
@@ -13,6 +14,8 @@ declare global {
 })
 export class SpecialistBookingApp {
   @State() private relativePath = '';
+  @State() private role: 'patient' | 'doctor' = 'patient';
+  @State() private pendingSlot: TimeSlot | null = null;
 
   @Prop() basePath: string = '';
   @Prop() apiBase: string;
@@ -40,18 +43,23 @@ export class SpecialistBookingApp {
     toRelative(location.pathname);
   }
 
+  private setRole(role: 'patient' | 'doctor') {
+    this.role = role;
+    const absolute = new URL('./list', new URL(this.basePath, document.baseURI)).pathname;
+    window.navigation.navigate(absolute);
+  }
+
   render() {
     let element = 'list';
     let appointmentId = '@new';
-
     let slotId = '@new';
 
     if (this.relativePath.startsWith('appointment/')) {
       element = 'editor';
       appointmentId = this.relativePath.split('/')[1];
-    } else if (this.relativePath.startsWith('slots')) {
+    } else if (this.relativePath.startsWith('slots') && this.role === 'doctor') {
       element = 'slots';
-    } else if (this.relativePath.startsWith('slot/')) {
+    } else if (this.relativePath.startsWith('slot/') && this.role === 'doctor') {
       element = 'slot-editor';
       slotId = this.relativePath.split('/')[1];
     }
@@ -63,12 +71,30 @@ export class SpecialistBookingApp {
 
     return (
       <Host>
+        <div class="role-toggle">
+          <button
+            class={{ 'role-btn': true, 'active': this.role === 'patient' }}
+            onClick={() => this.setRole('patient')}
+          >
+            <md-icon>person</md-icon>
+            Pacient
+          </button>
+          <button
+            class={{ 'role-btn': true, 'active': this.role === 'doctor' }}
+            onClick={() => this.setRole('doctor')}
+          >
+            <md-icon>medical_services</md-icon>
+            Lekár
+          </button>
+        </div>
+
         {element === 'editor' ? (
           <specialist-booking-appointment-editor
             appointment-id={appointmentId}
             clinic-id={this.clinicId}
             api-base={this.apiBase}
-            oneditor-closed={() => navigate('./list')}
+            prefill-slot={this.pendingSlot}
+            oneditor-closed={() => { this.pendingSlot = null; navigate('./list'); }}
           ></specialist-booking-appointment-editor>
         ) : element === 'slot-editor' ? (
           <specialist-booking-slot-editor
@@ -89,8 +115,10 @@ export class SpecialistBookingApp {
           <specialist-booking-appointment-list
             clinic-id={this.clinicId}
             api-base={this.apiBase}
+            role={this.role}
             onslots-opened={() => navigate('./slots')}
             onentry-clicked={(ev: CustomEvent<string>) => navigate('./appointment/' + ev.detail)}
+            onslot-booking-requested={(ev: CustomEvent<TimeSlot>) => { this.pendingSlot = ev.detail; navigate('./appointment/@new'); }}
           ></specialist-booking-appointment-list>
         )}
       </Host>
