@@ -18,7 +18,7 @@ export class SpecialistBookingAppointmentEditor {
   @State() private duration = 30;
 
   private formElement: HTMLFormElement;
-  private readonly durations = [15, 30, 45, 60, 90];
+  private readonly durations = [15, 30, 60];
 
   async componentWillLoad() {
     this.appointment = await this.getAppointmentAsync();
