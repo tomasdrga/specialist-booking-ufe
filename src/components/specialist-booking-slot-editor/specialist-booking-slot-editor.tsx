@@ -19,6 +19,8 @@ export class SpecialistBookingSlotEditor {
   @State() private capacity = 1;
 
   private formElement: HTMLFormElement;
+  private readonly durations = [15, 30, 60];
+  private readonly capacities = [1, 2, 3, 4, 5, 6];
 
   async componentWillLoad() {
     this.slot = await this.getSlotAsync();
@@ -122,15 +124,16 @@ export class SpecialistBookingSlotEditor {
 
     return (
       <Host>
+        <button class="back-link" onClick={() => this.editorClosed.emit('cancel')}>
+          <md-icon>arrow_back</md-icon>
+          Späť
+        </button>
+
         <header class="page-header">
           <div>
             <p class="eyebrow">Správa termínov ambulancie</p>
             <h1>{isNew ? 'Nový termín' : 'Upraviť termín'}</h1>
           </div>
-          <button class="back-btn" onClick={() => this.editorClosed.emit('cancel')}>
-            <md-icon>arrow_back</md-icon>
-            Späť
-          </button>
         </header>
 
         <div class="card">
@@ -159,24 +162,39 @@ export class SpecialistBookingSlotEditor {
             </md-filled-select>
           </form>
 
-          <div class="slider-section">
-            <div class="slider-row">
-              <span class="slider-label">
+          <div class="pills-section">
+            <div class="pills-group">
+              <span class="pills-label">
                 <md-icon>schedule</md-icon>
-                Trvanie: <strong>{this.duration} min</strong>
+                Trvanie
               </span>
-              <md-slider min="10" max="120" value={this.duration} ticks labeled
-                oninput={(ev: InputEvent) => { this.duration = +this.value(ev); if (this.slot) this.slot.durationMinutes = this.duration; }}>
-              </md-slider>
+              <div class="pills">
+                {this.durations.map(d => (
+                  <button
+                    class={{ pill: true, active: this.duration === d }}
+                    onClick={() => { this.duration = d; if (this.slot) this.slot.durationMinutes = d; }}
+                  >
+                    {d} min
+                  </button>
+                ))}
+              </div>
             </div>
-            <div class="slider-row">
-              <span class="slider-label">
+
+            <div class="pills-group">
+              <span class="pills-label">
                 <md-icon>group</md-icon>
-                Kapacita: <strong>{this.capacity}</strong>
+                Kapacita
               </span>
-              <md-slider min="1" max="6" value={this.capacity} ticks labeled
-                oninput={(ev: InputEvent) => { this.capacity = +this.value(ev); if (this.slot) this.slot.capacity = this.capacity; }}>
-              </md-slider>
+              <div class="pills">
+                {this.capacities.map(c => (
+                  <button
+                    class={{ pill: true, active: this.capacity === c }}
+                    onClick={() => { this.capacity = c; if (this.slot) this.slot.capacity = c; }}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
