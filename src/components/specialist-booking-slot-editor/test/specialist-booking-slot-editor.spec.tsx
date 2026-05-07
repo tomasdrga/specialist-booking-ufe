@@ -8,7 +8,11 @@ describe('specialist-booking-slot-editor', () => {
       html: `<specialist-booking-slot-editor slot-id="@new" clinic-id="test-clinic" api-base="http://test/api"></specialist-booking-slot-editor>`,
     });
 
-    const buttons = page.root.shadowRoot.querySelectorAll('md-filled-button, md-outlined-button, md-filled-tonal-button');
-    expect(buttons.length).toEqual(3);
+    let buttons = page.root.shadowRoot.querySelectorAll('.back-link');
+    expect(buttons.length).toEqual(1);
+    buttons = page.root.shadowRoot.querySelectorAll('.save-btn');
+    expect(buttons.length).toEqual(1);
+    buttons = page.root.shadowRoot.querySelectorAll('.delete-btn');
+    expect(buttons.length).toEqual(0);
   });
 });
