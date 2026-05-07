@@ -5,9 +5,6 @@
   padding: 2rem;
   box-sizing: border-box;
   color: #0f172a;
-  background:
-    radial-gradient(circle at top left, rgba(14, 165, 233, 0.28), transparent 32rem),
-    linear-gradient(135deg, #f8fafc 0%, #ecfeff 48%, #f1f5f9 100%);
 
   --md-filled-button-container-color: #0d9488;
   --md-filled-button-hover-container-color: #0f766e;

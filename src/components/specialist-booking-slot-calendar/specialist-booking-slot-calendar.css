@@ -3,7 +3,6 @@
   min-height: 100vh;
   padding: 2rem;
   box-sizing: border-box;
-  background: radial-gradient(circle at top right, rgba(20, 184, 166, 0.28), transparent 28rem), linear-gradient(135deg, #f8fafc, #ecfeff);
   color: #0f172a;
 }
 

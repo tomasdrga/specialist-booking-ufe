@@ -6,9 +6,6 @@
   padding: 1.5rem 2rem;
   box-sizing: border-box;
   color: #0f172a;
-  background:
-    radial-gradient(circle at top left, rgba(14, 165, 233, 0.22), transparent 32rem),
-    linear-gradient(135deg, #f8fafc 0%, #ecfeff 48%, #f1f5f9 100%);
 
   /* Text field */
   --md-filled-text-field-container-color: #ffffff;
