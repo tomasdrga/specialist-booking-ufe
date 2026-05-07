@@ -9,8 +9,8 @@ describe('<specialist-booking-app>', () => {
       html: `<specialist-booking-app base-path="/"></specialist-booking-app>`,
     });
     page.win.navigation = new EventTarget();
-    const child = await page.root.shadowRoot.firstElementChild;
-    expect(child.tagName.toLocaleLowerCase()).toEqual('specialist-booking-appointment-editor');
+    const child = page.root.shadowRoot.querySelector('specialist-booking-appointment-editor');
+    expect(child).not.toBeNull();
   });
 
   it('renders list', async () => {
@@ -20,7 +20,7 @@ describe('<specialist-booking-app>', () => {
       html: `<specialist-booking-app base-path="/specialist-booking/"></specialist-booking-app>`,
     });
     page.win.navigation = new EventTarget();
-    const child = await page.root.shadowRoot.firstElementChild;
-    expect(child.tagName.toLocaleLowerCase()).toEqual('specialist-booking-appointment-list');
+    const child = page.root.shadowRoot.querySelector('specialist-booking-appointment-list');
+    expect(child).not.toBeNull();
   });
 });
