@@ -105,15 +105,16 @@ export class SpecialistBookingAppointmentEditor {
 
     return (
       <Host>
+        <button class="back-link" onClick={() => this.editorClosed.emit('cancel')}>
+          <md-icon>arrow_back</md-icon>
+          Späť
+        </button>
+
         <header class="page-header">
           <div>
             <p class="eyebrow">Objednávka pacienta</p>
             <h1>{isNew ? 'Nová objednávka' : 'Upraviť objednávku'}</h1>
           </div>
-          <button class="back-btn" onClick={() => this.editorClosed.emit('cancel')}>
-            <md-icon>arrow_back</md-icon>
-            Späť
-          </button>
         </header>
 
         <div class="card">

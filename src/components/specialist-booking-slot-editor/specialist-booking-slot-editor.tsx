@@ -110,53 +110,89 @@ export class SpecialistBookingSlotEditor {
       return <Host><div class="error">{this.errorMessage}</div></Host>;
     }
 
+    const isNew = this.slotId === '@new';
+    const selectStyle = {
+      '--md-filled-select-container-color': '#ffffff',
+      '--md-sys-color-surface-container-highest': '#ffffff',
+      '--md-sys-color-primary': '#0d9488',
+      '--md-sys-color-secondary-container': '#f0fdfa',
+      '--md-filled-select-hover-state-layer-opacity': '0',
+      '--md-filled-select-focus-state-layer-opacity': '0',
+    } as any;
+
     return (
       <Host>
-        <form ref={el => (this.formElement = el)}>
-          <md-filled-text-field label="Začiatok termínu" required value={this.slot?.startsAt?.toISOString()}
-            oninput={(ev: InputEvent) => { if (this.slot) this.slot.startsAt = new Date(this.value(ev)); }}>
-            <md-icon slot="leading-icon">schedule</md-icon>
-          </md-filled-text-field>
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">Správa termínov ambulancie</p>
+            <h1>{isNew ? 'Nový termín' : 'Upraviť termín'}</h1>
+          </div>
+          <button class="back-btn" onClick={() => this.editorClosed.emit('cancel')}>
+            <md-icon>arrow_back</md-icon>
+            Späť
+          </button>
+        </header>
 
-          <md-filled-select label="Typ vyšetrenia" value={this.slot?.examinationType}
-            oninput={(ev: InputEvent) => { if (this.slot) this.slot.examinationType = this.value(ev); }}>
-            <md-icon slot="leading-icon">medical_services</md-icon>
-            <md-select-option value="Kardiologické vyšetrenie"><div slot="headline">Kardiologické vyšetrenie</div></md-select-option>
-            <md-select-option value="Neurologická konzultácia"><div slot="headline">Neurologická konzultácia</div></md-select-option>
-            <md-select-option value="Dermatologická kontrola"><div slot="headline">Dermatologická kontrola</div></md-select-option>
-            <md-select-option value="Ortopedické vyšetrenie"><div slot="headline">Ortopedické vyšetrenie</div></md-select-option>
-          </md-filled-select>
+        <div class="card">
+          <form ref={el => (this.formElement = el)}>
+            <md-filled-text-field label="Začiatok termínu" required value={this.slot?.startsAt?.toISOString()}
+              oninput={(ev: InputEvent) => { if (this.slot) this.slot.startsAt = new Date(this.value(ev)); }}>
+              <md-icon slot="leading-icon">schedule</md-icon>
+            </md-filled-text-field>
 
-          <md-filled-select label="Urgentný blok" value={this.slot?.urgentBlocked ? 'true' : 'false'}
-            oninput={(ev: InputEvent) => { if (this.slot) this.slot.urgentBlocked = this.value(ev) === 'true'; }}>
-            <md-icon slot="leading-icon">emergency</md-icon>
-            <md-select-option value="false"><div slot="headline">Dostupné pre objednávanie</div></md-select-option>
-            <md-select-option value="true"><div slot="headline">Blokované pre urgentný prípad</div></md-select-option>
-          </md-filled-select>
-        </form>
+            <md-filled-select label="Typ vyšetrenia" value={this.slot?.examinationType}
+              style={selectStyle}
+              oninput={(ev: InputEvent) => { if (this.slot) this.slot.examinationType = this.value(ev); }}>
+              <md-icon slot="leading-icon">medical_services</md-icon>
+              <md-select-option value="Kardiologické vyšetrenie"><div slot="headline">Kardiologické vyšetrenie</div></md-select-option>
+              <md-select-option value="Neurologická konzultácia"><div slot="headline">Neurologická konzultácia</div></md-select-option>
+              <md-select-option value="Dermatologická kontrola"><div slot="headline">Dermatologická kontrola</div></md-select-option>
+              <md-select-option value="Ortopedické vyšetrenie"><div slot="headline">Ortopedické vyšetrenie</div></md-select-option>
+            </md-filled-select>
 
-        <div class="slider-row">
-          <span>Trvanie: <strong>{this.duration}</strong> min</span>
-          <md-slider min="10" max="120" value={this.duration} ticks labeled oninput={(ev: InputEvent) => { this.duration = +this.value(ev); if (this.slot) this.slot.durationMinutes = this.duration; }}></md-slider>
+            <md-filled-select label="Urgentný blok" value={this.slot?.urgentBlocked ? 'true' : 'false'}
+              style={selectStyle}
+              oninput={(ev: InputEvent) => { if (this.slot) this.slot.urgentBlocked = this.value(ev) === 'true'; }}>
+              <md-icon slot="leading-icon">emergency</md-icon>
+              <md-select-option value="false"><div slot="headline">Dostupné pre objednávanie</div></md-select-option>
+              <md-select-option value="true"><div slot="headline">Blokované pre urgentný prípad</div></md-select-option>
+            </md-filled-select>
+          </form>
+
+          <div class="slider-section">
+            <div class="slider-row">
+              <span class="slider-label">
+                <md-icon>schedule</md-icon>
+                Trvanie: <strong>{this.duration} min</strong>
+              </span>
+              <md-slider min="10" max="120" value={this.duration} ticks labeled
+                oninput={(ev: InputEvent) => { this.duration = +this.value(ev); if (this.slot) this.slot.durationMinutes = this.duration; }}>
+              </md-slider>
+            </div>
+            <div class="slider-row">
+              <span class="slider-label">
+                <md-icon>group</md-icon>
+                Kapacita: <strong>{this.capacity}</strong>
+              </span>
+              <md-slider min="1" max="6" value={this.capacity} ticks labeled
+                oninput={(ev: InputEvent) => { this.capacity = +this.value(ev); if (this.slot) this.slot.capacity = this.capacity; }}>
+              </md-slider>
+            </div>
+          </div>
         </div>
 
-        <div class="slider-row">
-          <span>Kapacita: <strong>{this.capacity}</strong></span>
-          <md-slider min="1" max="6" value={this.capacity} ticks labeled oninput={(ev: InputEvent) => { this.capacity = +this.value(ev); if (this.slot) this.slot.capacity = this.capacity; }}></md-slider>
-        </div>
-
-        <md-divider></md-divider>
         <div class="actions">
-          <md-filled-tonal-button disabled={!this.slot || this.slot?.id === '@new'} onClick={() => this.deleteSlot()}>
-            <md-icon slot="icon">delete</md-icon>
-            Zmazať termín
-          </md-filled-tonal-button>
+          {!isNew && (
+            <button class="delete-btn" onClick={() => this.deleteSlot()}>
+              <md-icon>delete</md-icon>
+              Zmazať termín
+            </button>
+          )}
           <span class="stretch-fill"></span>
-          <md-outlined-button onClick={() => this.editorClosed.emit('cancel')}>Späť</md-outlined-button>
-          <md-filled-button onClick={() => this.updateSlot()}>
-            <md-icon slot="icon">save</md-icon>
+          <button class="save-btn" onClick={() => this.updateSlot()}>
+            <md-icon>save</md-icon>
             Uložiť
-          </md-filled-button>
+          </button>
         </div>
       </Host>
     );

@@ -26,6 +26,51 @@
   flex-wrap: wrap;
 }
 
+.back-link {
+  max-width: 1120px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: color 0.12s ease, gap 0.12s ease;
+}
+
+.back-link:hover {
+  color: #0d9488;
+  gap: 0.5rem;
+}
+
+.hero-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.hero-cta:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+}
+
 .eyebrow {
   margin: 0 0 0.3rem;
   color: #0d9488;

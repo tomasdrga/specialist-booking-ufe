@@ -50,15 +50,21 @@ export class SpecialistBookingSlotCalendar {
     const groups = this.groupedSlots();
     return (
       <Host>
+        <button class="back-link" onClick={() => this.appointmentsOpened.emit('appointments')}>
+          <md-icon>arrow_back</md-icon>
+          Objednávky
+        </button>
+
         <section class="hero compact">
-          <p class="eyebrow">Administrácia ambulancie</p>
-          <h1>Kalendár dostupných termínov</h1>
+          <div>
+            <p class="eyebrow">Administrácia ambulancie</p>
+            <h1>Kalendár dostupných termínov</h1>
+          </div>
           <div class="hero-actions">
-            <md-outlined-button onClick={() => this.appointmentsOpened.emit('appointments')}>Objednávky</md-outlined-button>
-            <md-filled-button onClick={() => this.slotCreateClicked.emit('@new')}>
-              <md-icon slot="icon">add</md-icon>
+            <button class="hero-cta" onClick={() => this.slotCreateClicked.emit('@new')}>
+              <md-icon>add</md-icon>
               Nový termín
-            </md-filled-button>
+            </button>
           </div>
         </section>
 
