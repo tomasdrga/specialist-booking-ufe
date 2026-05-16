@@ -96,6 +96,7 @@ export class SpecialistBookingApp {
             clinic-id={this.clinicId}
             api-base={this.apiBase}
             prefill-slot={this.pendingSlot}
+            role={this.role}
             oneditor-closed={() => { this.pendingSlot = null; navigate('./list'); }}
           ></specialist-booking-appointment-editor>
         ) : element === 'slot-editor' ? (

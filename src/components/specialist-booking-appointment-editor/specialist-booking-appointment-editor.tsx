@@ -11,6 +11,7 @@ export class SpecialistBookingAppointmentEditor {
   @Prop() apiBase: string;
   @Prop() clinicId: string;
   @Prop() prefillSlot: TimeSlot | null = null;
+  @Prop() role: 'patient' | 'doctor' = 'patient';
 
   @Event({ eventName: 'editor-closed' }) editorClosed: EventEmitter<string>;
 
@@ -74,6 +75,9 @@ export class SpecialistBookingAppointmentEditor {
 
   private async updateAppointment() {
     if (!this.validateForm()) return;
+    if (this.appointment && this.role === 'patient') {
+      this.appointment.status = AppointmentStatusEnum.Requested;
+    }
     try {
       const response = this.appointmentId === '@new'
         ? await this.api().createAppointmentRaw({ clinicId: this.clinicId, appointment: this.appointment })
@@ -180,15 +184,17 @@ export class SpecialistBookingAppointmentEditor {
               <md-select-option value="Ortopedické vyšetrenie"><div slot="headline">Ortopedické vyšetrenie</div></md-select-option>
             </md-filled-select>
 
-            <md-filled-select label="Stav objednávky" value={this.appointment?.status}
-              style={{ '--md-filled-select-container-color': '#ffffff', '--md-sys-color-surface-container-highest': '#ffffff', '--md-sys-color-primary': '#0d9488', '--md-sys-color-secondary-container': '#f0fdfa', '--md-filled-select-hover-state-layer-opacity': '0', '--md-filled-select-focus-state-layer-opacity': '0' } as any}
-              oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.status = this.handleInputEvent(ev) as AppointmentStatusEnum; }}>
-              <md-icon slot="leading-icon">pending_actions</md-icon>
-              <md-select-option value="requested"><div slot="headline">Čaká na potvrdenie</div></md-select-option>
-              <md-select-option value="confirmed"><div slot="headline">Potvrdené</div></md-select-option>
-              <md-select-option value="completed"><div slot="headline">Ukončené</div></md-select-option>
-              <md-select-option value="cancelled"><div slot="headline">Zrušené</div></md-select-option>
-            </md-filled-select>
+            {this.role === 'doctor' ? (
+              <md-filled-select label="Stav objednávky" value={this.appointment?.status}
+                style={{ '--md-filled-select-container-color': '#ffffff', '--md-sys-color-surface-container-highest': '#ffffff', '--md-sys-color-primary': '#0d9488', '--md-sys-color-secondary-container': '#f0fdfa', '--md-filled-select-hover-state-layer-opacity': '0', '--md-filled-select-focus-state-layer-opacity': '0' } as any}
+                oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.status = this.handleInputEvent(ev) as AppointmentStatusEnum; }}>
+                <md-icon slot="leading-icon">pending_actions</md-icon>
+                <md-select-option value="requested"><div slot="headline">Čaká na potvrdenie</div></md-select-option>
+                <md-select-option value="confirmed"><div slot="headline">Potvrdené</div></md-select-option>
+                <md-select-option value="completed"><div slot="headline">Ukončené</div></md-select-option>
+                <md-select-option value="cancelled"><div slot="headline">Zrušené</div></md-select-option>
+              </md-filled-select>
+            ) : null}
           </form>
 
           <div class="duration-section">

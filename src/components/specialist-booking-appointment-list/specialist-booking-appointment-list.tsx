@@ -71,10 +71,6 @@ export class SpecialistBookingAppointmentList {
               <md-icon>add</md-icon>
               Objednať sa
             </button>
-            <button class="hero-secondary" onClick={() => this.waitlistOpened.emit('waitlist')}>
-              <md-icon>hourglass_top</md-icon>
-              Čakacia listina
-            </button>
           </div>
         </section>
 
@@ -146,6 +142,12 @@ export class SpecialistBookingAppointmentList {
           <div>
             <p class="eyebrow">Systém objednávania ku špecialistovi</p>
             <h1>Prehľad dnešných objednávok a kapacity ambulancie</h1>
+          </div>
+          <div class="hero-actions">
+            <button class="hero-secondary" onClick={() => this.waitlistOpened.emit('waitlist')}>
+              <md-icon>hourglass_top</md-icon>
+              Čakacia listina
+            </button>
           </div>
         </section>
 

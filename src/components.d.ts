@@ -24,6 +24,10 @@ export namespace Components {
           * @default null
          */
         "prefillSlot": TimeSlot | null;
+        /**
+          * @default 'patient'
+         */
+        "role": 'patient' | 'doctor';
     }
     interface SpecialistBookingAppointmentList {
         "apiBase": string;
@@ -191,6 +195,10 @@ declare namespace LocalJSX {
           * @default null
          */
         "prefillSlot"?: TimeSlot | null;
+        /**
+          * @default 'patient'
+         */
+        "role"?: 'patient' | 'doctor';
     }
     interface SpecialistBookingAppointmentList {
         "apiBase"?: string;
@@ -232,6 +240,7 @@ declare namespace LocalJSX {
         "appointmentId": string;
         "apiBase": string;
         "clinicId": string;
+        "role": 'patient' | 'doctor';
     }
     interface SpecialistBookingAppointmentListAttributes {
         "apiBase": string;
