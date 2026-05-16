@@ -10,6 +10,7 @@ export class SpecialistBookingAppointmentList {
   @Event({ eventName: 'entry-clicked' }) entryClicked: EventEmitter<string>;
   @Event({ eventName: 'slots-opened' }) slotsOpened: EventEmitter<string>;
   @Event({ eventName: 'slot-booking-requested' }) slotBookingRequested: EventEmitter<TimeSlot>;
+  @Event({ eventName: 'waitlist-opened' }) waitlistOpened: EventEmitter<string>;
 
   @Prop() apiBase: string;
   @Prop() clinicId: string;
@@ -69,6 +70,10 @@ export class SpecialistBookingAppointmentList {
             <button class="hero-cta" onClick={() => this.entryClicked.emit('@new')}>
               <md-icon>add</md-icon>
               Objednať sa
+            </button>
+            <button class="hero-secondary" onClick={() => this.waitlistOpened.emit('waitlist')}>
+              <md-icon>hourglass_top</md-icon>
+              Čakacia listina
             </button>
           </div>
         </section>
@@ -132,7 +137,7 @@ export class SpecialistBookingAppointmentList {
 
   private renderDoctor() {
     const confirmed = this.appointments.filter(a => a.status === 'confirmed').length;
-    const pending   = this.appointments.filter(a => a.status === 'requested').length;
+    const pending = this.appointments.filter(a => a.status === 'requested').length;
     const available = this.timeSlots.filter(s => !s.urgentBlocked && s.booked < s.capacity).length;
 
     return (
@@ -183,12 +188,14 @@ export class SpecialistBookingAppointmentList {
                       <span class="row-name">{a.patientName}</span>
                       <span class="row-detail">{a.examinationType + ' · ' + a.startsAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' · ' + a.durationMinutes + ' min'}</span>
                     </div>
-                    <span class={`status ${a.status}`}>{{
-                      requested: 'Čaká na potvrdenie',
-                      confirmed: 'Potvrdené',
-                      completed: 'Ukončené',
-                      cancelled: 'Zrušené',
-                    }[a.status] ?? a.status}</span>
+                    <span class={`status ${a.status}`}>{
+                      {
+                        requested: 'Čaká na potvrdenie',
+                        confirmed: 'Potvrdené',
+                        completed: 'Ukončené',
+                        cancelled: 'Zrušené',
+                      }[a.status] ?? a.status
+                    }</span>
                   </div>
                 ))}
               </div>

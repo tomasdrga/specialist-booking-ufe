@@ -79,6 +79,10 @@ export class SpecialistBookingSlotEditor {
 
   private async updateSlot() {
     if (!this.validateForm()) return;
+    if (this.slot && this.slot.booked > this.capacity) {
+      this.errorMessage = 'Počet obsadených miest nemôže byť vyšší ako kapacita termínu';
+      return;
+    }
 
     try {
       const response = this.slotId === '@new'

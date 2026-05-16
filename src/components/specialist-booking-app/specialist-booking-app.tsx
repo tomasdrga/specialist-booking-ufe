@@ -62,6 +62,8 @@ export class SpecialistBookingApp {
     } else if (this.relativePath.startsWith('slot/') && this.role === 'doctor') {
       element = 'slot-editor';
       slotId = this.relativePath.split('/')[1];
+    } else if (this.relativePath.startsWith('waitlist')) {
+      element = 'waitlist';
     }
 
     const navigate = (path: string) => {
@@ -111,12 +113,19 @@ export class SpecialistBookingApp {
             onslot-create-clicked={() => navigate('./slot/@new')}
             onslot-clicked={(ev: CustomEvent<string>) => navigate('./slot/' + ev.detail)}
           ></specialist-booking-slot-calendar>
+        ) : element === 'waitlist' ? (
+          <specialist-booking-waitlist-panel
+            clinic-id={this.clinicId}
+            api-base={this.apiBase}
+            onappointments-opened={() => navigate('./list')}
+          ></specialist-booking-waitlist-panel>
         ) : (
           <specialist-booking-appointment-list
             clinic-id={this.clinicId}
             api-base={this.apiBase}
             role={this.role}
             onslots-opened={() => navigate('./slots')}
+            onwaitlist-opened={() => navigate('./waitlist')}
             onentry-clicked={(ev: CustomEvent<string>) => navigate('./appointment/' + ev.detail)}
             onslot-booking-requested={(ev: CustomEvent<TimeSlot>) => { this.pendingSlot = ev.detail; navigate('./appointment/@new'); }}
           ></specialist-booking-appointment-list>

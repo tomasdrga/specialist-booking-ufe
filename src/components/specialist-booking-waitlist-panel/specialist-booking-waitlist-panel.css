@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  padding: 1rem;
+}
+
+.hero {
+  margin-bottom: 1rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.error {
+  color: #b3261e;
+  margin: 0.5rem 0;
+}
+
+.info {
+  color: #1b5e20;
+  margin: 0.5rem 0;
+}
+
+.empty {
+  opacity: 0.75;
+}

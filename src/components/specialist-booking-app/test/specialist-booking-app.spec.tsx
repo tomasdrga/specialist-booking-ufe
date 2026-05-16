@@ -23,4 +23,15 @@ describe('<specialist-booking-app>', () => {
     const child = page.root.shadowRoot.querySelector('specialist-booking-appointment-list');
     expect(child).not.toBeNull();
   });
+
+  it('renders waitlist', async () => {
+    const page = await newSpecPage({
+      url: `http://localhost/specialist-booking/waitlist`,
+      components: [SpecialistBookingApp],
+      html: `<specialist-booking-app base-path="/specialist-booking/"></specialist-booking-app>`,
+    });
+    page.win.navigation = new EventTarget();
+    const child = page.root.shadowRoot.querySelector('specialist-booking-waitlist-panel');
+    expect(child).not.toBeNull();
+  });
 });

@@ -42,6 +42,10 @@ export namespace Components {
         "clinicId": string;
         "slotId": string;
     }
+    interface SpecialistBookingWaitlistPanel {
+        "apiBase": string;
+        "clinicId": string;
+    }
 }
 export interface SpecialistBookingAppointmentEditorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
@@ -58,6 +62,10 @@ export interface SpecialistBookingSlotCalendarCustomEvent<T> extends CustomEvent
 export interface SpecialistBookingSlotEditorCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLSpecialistBookingSlotEditorElement;
+}
+export interface SpecialistBookingWaitlistPanelCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLSpecialistBookingWaitlistPanelElement;
 }
 declare global {
     interface HTMLSpecialistBookingAppElement extends Components.SpecialistBookingApp, HTMLStencilElement {
@@ -87,6 +95,7 @@ declare global {
         "entry-clicked": string;
         "slots-opened": string;
         "slot-booking-requested": TimeSlot;
+        "waitlist-opened": string;
     }
     interface HTMLSpecialistBookingAppointmentListElement extends Components.SpecialistBookingAppointmentList, HTMLStencilElement {
         addEventListener<K extends keyof HTMLSpecialistBookingAppointmentListElementEventMap>(type: K, listener: (this: HTMLSpecialistBookingAppointmentListElement, ev: SpecialistBookingAppointmentListCustomEvent<HTMLSpecialistBookingAppointmentListElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
@@ -138,12 +147,30 @@ declare global {
         prototype: HTMLSpecialistBookingSlotEditorElement;
         new (): HTMLSpecialistBookingSlotEditorElement;
     };
+    interface HTMLSpecialistBookingWaitlistPanelElementEventMap {
+        "appointments-opened": string;
+    }
+    interface HTMLSpecialistBookingWaitlistPanelElement extends Components.SpecialistBookingWaitlistPanel, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLSpecialistBookingWaitlistPanelElementEventMap>(type: K, listener: (this: HTMLSpecialistBookingWaitlistPanelElement, ev: SpecialistBookingWaitlistPanelCustomEvent<HTMLSpecialistBookingWaitlistPanelElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLSpecialistBookingWaitlistPanelElementEventMap>(type: K, listener: (this: HTMLSpecialistBookingWaitlistPanelElement, ev: SpecialistBookingWaitlistPanelCustomEvent<HTMLSpecialistBookingWaitlistPanelElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLSpecialistBookingWaitlistPanelElement: {
+        prototype: HTMLSpecialistBookingWaitlistPanelElement;
+        new (): HTMLSpecialistBookingWaitlistPanelElement;
+    };
     interface HTMLElementTagNameMap {
         "specialist-booking-app": HTMLSpecialistBookingAppElement;
         "specialist-booking-appointment-editor": HTMLSpecialistBookingAppointmentEditorElement;
         "specialist-booking-appointment-list": HTMLSpecialistBookingAppointmentListElement;
         "specialist-booking-slot-calendar": HTMLSpecialistBookingSlotCalendarElement;
         "specialist-booking-slot-editor": HTMLSpecialistBookingSlotEditorElement;
+        "specialist-booking-waitlist-panel": HTMLSpecialistBookingWaitlistPanelElement;
     }
 }
 declare namespace LocalJSX {
@@ -171,6 +198,7 @@ declare namespace LocalJSX {
         "onEntry-clicked"?: (event: SpecialistBookingAppointmentListCustomEvent<string>) => void;
         "onSlot-booking-requested"?: (event: SpecialistBookingAppointmentListCustomEvent<TimeSlot>) => void;
         "onSlots-opened"?: (event: SpecialistBookingAppointmentListCustomEvent<string>) => void;
+        "onWaitlist-opened"?: (event: SpecialistBookingAppointmentListCustomEvent<string>) => void;
         /**
           * @default 'patient'
          */
@@ -188,6 +216,11 @@ declare namespace LocalJSX {
         "clinicId"?: string;
         "onEditor-closed"?: (event: SpecialistBookingSlotEditorCustomEvent<string>) => void;
         "slotId"?: string;
+    }
+    interface SpecialistBookingWaitlistPanel {
+        "apiBase"?: string;
+        "clinicId"?: string;
+        "onAppointments-opened"?: (event: SpecialistBookingWaitlistPanelCustomEvent<string>) => void;
     }
 
     interface SpecialistBookingAppAttributes {
@@ -214,6 +247,10 @@ declare namespace LocalJSX {
         "apiBase": string;
         "clinicId": string;
     }
+    interface SpecialistBookingWaitlistPanelAttributes {
+        "apiBase": string;
+        "clinicId": string;
+    }
 
     interface IntrinsicElements {
         "specialist-booking-app": Omit<SpecialistBookingApp, keyof SpecialistBookingAppAttributes> & { [K in keyof SpecialistBookingApp & keyof SpecialistBookingAppAttributes]?: SpecialistBookingApp[K] } & { [K in keyof SpecialistBookingApp & keyof SpecialistBookingAppAttributes as `attr:${K}`]?: SpecialistBookingAppAttributes[K] } & { [K in keyof SpecialistBookingApp & keyof SpecialistBookingAppAttributes as `prop:${K}`]?: SpecialistBookingApp[K] };
@@ -221,6 +258,7 @@ declare namespace LocalJSX {
         "specialist-booking-appointment-list": Omit<SpecialistBookingAppointmentList, keyof SpecialistBookingAppointmentListAttributes> & { [K in keyof SpecialistBookingAppointmentList & keyof SpecialistBookingAppointmentListAttributes]?: SpecialistBookingAppointmentList[K] } & { [K in keyof SpecialistBookingAppointmentList & keyof SpecialistBookingAppointmentListAttributes as `attr:${K}`]?: SpecialistBookingAppointmentListAttributes[K] } & { [K in keyof SpecialistBookingAppointmentList & keyof SpecialistBookingAppointmentListAttributes as `prop:${K}`]?: SpecialistBookingAppointmentList[K] };
         "specialist-booking-slot-calendar": Omit<SpecialistBookingSlotCalendar, keyof SpecialistBookingSlotCalendarAttributes> & { [K in keyof SpecialistBookingSlotCalendar & keyof SpecialistBookingSlotCalendarAttributes]?: SpecialistBookingSlotCalendar[K] } & { [K in keyof SpecialistBookingSlotCalendar & keyof SpecialistBookingSlotCalendarAttributes as `attr:${K}`]?: SpecialistBookingSlotCalendarAttributes[K] } & { [K in keyof SpecialistBookingSlotCalendar & keyof SpecialistBookingSlotCalendarAttributes as `prop:${K}`]?: SpecialistBookingSlotCalendar[K] };
         "specialist-booking-slot-editor": Omit<SpecialistBookingSlotEditor, keyof SpecialistBookingSlotEditorAttributes> & { [K in keyof SpecialistBookingSlotEditor & keyof SpecialistBookingSlotEditorAttributes]?: SpecialistBookingSlotEditor[K] } & { [K in keyof SpecialistBookingSlotEditor & keyof SpecialistBookingSlotEditorAttributes as `attr:${K}`]?: SpecialistBookingSlotEditorAttributes[K] } & { [K in keyof SpecialistBookingSlotEditor & keyof SpecialistBookingSlotEditorAttributes as `prop:${K}`]?: SpecialistBookingSlotEditor[K] };
+        "specialist-booking-waitlist-panel": Omit<SpecialistBookingWaitlistPanel, keyof SpecialistBookingWaitlistPanelAttributes> & { [K in keyof SpecialistBookingWaitlistPanel & keyof SpecialistBookingWaitlistPanelAttributes]?: SpecialistBookingWaitlistPanel[K] } & { [K in keyof SpecialistBookingWaitlistPanel & keyof SpecialistBookingWaitlistPanelAttributes as `attr:${K}`]?: SpecialistBookingWaitlistPanelAttributes[K] } & { [K in keyof SpecialistBookingWaitlistPanel & keyof SpecialistBookingWaitlistPanelAttributes as `prop:${K}`]?: SpecialistBookingWaitlistPanel[K] };
     }
 }
 export { LocalJSX as JSX };
@@ -232,6 +270,7 @@ declare module "@stencil/core" {
             "specialist-booking-appointment-list": LocalJSX.IntrinsicElements["specialist-booking-appointment-list"] & JSXBase.HTMLAttributes<HTMLSpecialistBookingAppointmentListElement>;
             "specialist-booking-slot-calendar": LocalJSX.IntrinsicElements["specialist-booking-slot-calendar"] & JSXBase.HTMLAttributes<HTMLSpecialistBookingSlotCalendarElement>;
             "specialist-booking-slot-editor": LocalJSX.IntrinsicElements["specialist-booking-slot-editor"] & JSXBase.HTMLAttributes<HTMLSpecialistBookingSlotEditorElement>;
+            "specialist-booking-waitlist-panel": LocalJSX.IntrinsicElements["specialist-booking-waitlist-panel"] & JSXBase.HTMLAttributes<HTMLSpecialistBookingWaitlistPanelElement>;
         }
     }
 }

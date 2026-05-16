@@ -1,5 +1,5 @@
 import { Component, Event, EventEmitter, Host, Prop, State, h } from '@stencil/core';
-import { Appointment, Configuration, SpecialistBookingApi, TimeSlot } from '../../api/specialist-booking';
+import { Appointment, AppointmentStatusEnum, Configuration, SpecialistBookingApi, TimeSlot } from '../../api/specialist-booking';
 
 @Component({
   tag: 'specialist-booking-appointment-editor',
@@ -40,7 +40,7 @@ export class SpecialistBookingAppointmentEditor {
         startsAt: this.prefillSlot?.startsAt ?? new Date(Date.now() + 24 * 60 * 60 * 1000),
         durationMinutes: this.prefillSlot?.durationMinutes ?? 30,
         examinationType: this.prefillSlot?.examinationType ?? 'Kardiologické vyšetrenie',
-        status: 'requested',
+        status: AppointmentStatusEnum.Requested,
       };
     }
 
@@ -56,6 +56,12 @@ export class SpecialistBookingAppointmentEditor {
 
   private handleInputEvent(event: InputEvent): string {
     return (event.target as HTMLInputElement).value;
+  }
+
+  private toDatetimeLocal(date?: Date): string {
+    if (!date) return '';
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
 
   private validateForm(): boolean {
@@ -84,7 +90,10 @@ export class SpecialistBookingAppointmentEditor {
   }
 
   private async deleteAppointment() {
-    if (this.appointmentId === '@new') { this.editorClosed.emit('cancel'); return; }
+    if (this.appointmentId === '@new') {
+      this.editorClosed.emit('cancel');
+      return;
+    }
     try {
       const response = await this.api().deleteAppointmentRaw({ clinicId: this.clinicId, appointmentId: this.appointmentId });
       if (response.raw.status < 299) {
@@ -135,8 +144,22 @@ export class SpecialistBookingAppointmentEditor {
               <md-icon slot="leading-icon">mail</md-icon>
             </md-filled-text-field>
 
+            <div class="datetime-field">
+              <md-icon>schedule</md-icon>
+              <div class="datetime-inner">
+                <span class="datetime-label">Začiatok objednávky *</span>
+                <input
+                  type="datetime-local"
+                  class="datetime-input"
+                  value={this.toDatetimeLocal(this.appointment?.startsAt)}
+                  onInput={(ev: InputEvent) => { if (this.appointment) this.appointment.startsAt = new Date((ev.target as HTMLInputElement).value); }}
+                  required
+                />
+              </div>
+            </div>
+
             <md-filled-select label="Odosielajúci lekár" value={this.appointment?.referringDoctor ?? ''}
-              style={{"--md-filled-select-container-color": "#ffffff", "--md-sys-color-surface-container-highest": "#ffffff", "--md-sys-color-primary": "#0d9488", "--md-sys-color-secondary-container": "#f0fdfa", "--md-filled-select-hover-state-layer-opacity": "0", "--md-filled-select-focus-state-layer-opacity": "0"} as any}
+              style={{ '--md-filled-select-container-color': '#ffffff', '--md-sys-color-surface-container-highest': '#ffffff', '--md-sys-color-primary': '#0d9488', '--md-sys-color-secondary-container': '#f0fdfa', '--md-filled-select-hover-state-layer-opacity': '0', '--md-filled-select-focus-state-layer-opacity': '0' } as any}
               oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.referringDoctor = this.handleInputEvent(ev); }}>
               <md-icon slot="leading-icon">medical_services</md-icon>
               <md-select-option value=""><div slot="headline">— bez odosielajúceho lekára —</div></md-select-option>
@@ -148,7 +171,7 @@ export class SpecialistBookingAppointmentEditor {
             </md-filled-select>
 
             <md-filled-select label="Typ vyšetrenia" value={this.appointment?.examinationType}
-              style={{"--md-filled-select-container-color": "#ffffff", "--md-sys-color-surface-container-highest": "#ffffff", "--md-sys-color-primary": "#0d9488", "--md-sys-color-secondary-container": "#f0fdfa", "--md-filled-select-hover-state-layer-opacity": "0", "--md-filled-select-focus-state-layer-opacity": "0"} as any}
+              style={{ '--md-filled-select-container-color': '#ffffff', '--md-sys-color-surface-container-highest': '#ffffff', '--md-sys-color-primary': '#0d9488', '--md-sys-color-secondary-container': '#f0fdfa', '--md-filled-select-hover-state-layer-opacity': '0', '--md-filled-select-focus-state-layer-opacity': '0' } as any}
               oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.examinationType = this.handleInputEvent(ev); }}>
               <md-icon slot="leading-icon">medical_services</md-icon>
               <md-select-option value="Kardiologické vyšetrenie"><div slot="headline">Kardiologické vyšetrenie</div></md-select-option>
@@ -158,8 +181,8 @@ export class SpecialistBookingAppointmentEditor {
             </md-filled-select>
 
             <md-filled-select label="Stav objednávky" value={this.appointment?.status}
-              style={{"--md-filled-select-container-color": "#ffffff", "--md-sys-color-surface-container-highest": "#ffffff", "--md-sys-color-primary": "#0d9488", "--md-sys-color-secondary-container": "#f0fdfa", "--md-filled-select-hover-state-layer-opacity": "0", "--md-filled-select-focus-state-layer-opacity": "0"} as any}
-              oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.status = this.handleInputEvent(ev); }}>
+              style={{ '--md-filled-select-container-color': '#ffffff', '--md-sys-color-surface-container-highest': '#ffffff', '--md-sys-color-primary': '#0d9488', '--md-sys-color-secondary-container': '#f0fdfa', '--md-filled-select-hover-state-layer-opacity': '0', '--md-filled-select-focus-state-layer-opacity': '0' } as any}
+              oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.status = this.handleInputEvent(ev) as AppointmentStatusEnum; }}>
               <md-icon slot="leading-icon">pending_actions</md-icon>
               <md-select-option value="requested"><div slot="headline">Čaká na potvrdenie</div></md-select-option>
               <md-select-option value="confirmed"><div slot="headline">Potvrdené</div></md-select-option>
@@ -176,7 +199,7 @@ export class SpecialistBookingAppointmentEditor {
             <div class="duration-pills">
               {this.durations.map(d => (
                 <button
-                  class={{ 'duration-pill': true, 'active': this.duration === d }}
+                  class={{ 'duration-pill': true, active: this.duration === d }}
                   onClick={() => {
                     this.duration = d;
                     if (this.appointment) this.appointment.durationMinutes = d;
@@ -206,10 +229,3 @@ export class SpecialistBookingAppointmentEditor {
     );
   }
 }
- 
- 
- 
- 
- 
- 
- 

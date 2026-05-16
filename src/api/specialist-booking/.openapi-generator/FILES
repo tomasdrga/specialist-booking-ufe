@@ -2,6 +2,9 @@ apis/SpecialistBookingApi.ts
 apis/index.ts
 index.ts
 models/Appointment.ts
+models/AssignBestSlotResponse.ts
+models/ErrorResponse.ts
 models/TimeSlot.ts
+models/WaitingListEntry.ts
 models/index.ts
 runtime.ts
