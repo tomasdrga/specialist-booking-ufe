@@ -76,8 +76,8 @@ export class SpecialistBookingWaitlistPanel {
     return (
       <Host>
         <section class="hero compact">
-          <p class="eyebrow">Rozšírenie funkcionality</p>
-          <h1>Inteligentná čakacia listina</h1>
+          <p class="eyebrow">Pracovný zoznam ambulancie</p>
+          <h1>Čakajúce žiadosti bez voľného termínu</h1>
           <div class="hero-actions">
             <md-outlined-button onClick={() => this.appointmentsOpened.emit('appointments')}>Objednávky</md-outlined-button>
             <md-filled-button onClick={() => this.reload()}>Obnoviť</md-filled-button>
@@ -88,6 +88,8 @@ export class SpecialistBookingWaitlistPanel {
         {this.errorMessage ? <div class="error">{this.errorMessage}</div> : null}
         {this.infoMessage ? <div class="info">{this.infoMessage}</div> : null}
 
+        <p class="description">Tu lekár vidí pacientov, ktorých systém zatiaľ nevedel automaticky priradiť do vhodného termínu. Po vytvorení alebo uvoľnení kapacity môžete skúsiť priradenie znova.</p>
+
         <md-list>
           {this.entries.map(entry => (
             <md-list-item>
@@ -96,7 +98,7 @@ export class SpecialistBookingWaitlistPanel {
                 {entry.examinationType} · zaradené {new Date(entry.requestedAt).toLocaleString('sk-SK')}
               </div>
               <md-filled-tonal-button slot="end" onClick={() => this.assignBestSlot(entry.appointmentId)}>
-                Skúsiť priradiť termín
+                Priradiť najbližší termín
               </md-filled-tonal-button>
             </md-list-item>
           ))}

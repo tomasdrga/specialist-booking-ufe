@@ -27,6 +27,10 @@
 
 .hero-actions {
   flex-shrink: 0;
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .hero-cta {
@@ -49,6 +53,44 @@
 .hero-cta:hover {
   background: #1e293b;
   transform: translateY(-1px);
+}
+
+.hero-secondary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.68rem 1.2rem;
+  background: #f0fdfa;
+  color: #0f766e;
+  border: 1.5px solid #99f6e4;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.hero-secondary:hover {
+  background: #ccfbf1;
+  transform: translateY(-1px);
+}
+
+.flow-note {
+  max-width: 980px;
+  margin: 0 auto 1rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid #bae6fd;
+  border-radius: 18px;
+  background: rgba(240, 249, 255, 0.86);
+  color: #075985;
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.flow-note strong {
+  color: #0f172a;
 }
 
 .eyebrow,

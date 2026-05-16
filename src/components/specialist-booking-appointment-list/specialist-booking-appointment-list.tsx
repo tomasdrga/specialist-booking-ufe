@@ -74,6 +74,10 @@ export class SpecialistBookingAppointmentList {
           </div>
         </section>
 
+        <div class="flow-note">
+          <strong>Ako to funguje:</strong> vyberte si voľný termín alebo odošlite žiadosť. Ak je vhodný termín voľný, systém ho potvrdí automaticky. Ak nie, žiadosť prevezme ambulancia v čakacej listine.
+        </div>
+
         {this.errorMessage ? (
           <div class="error">{this.errorMessage}</div>
         ) : (
@@ -88,7 +92,7 @@ export class SpecialistBookingAppointmentList {
               </div>
               <div class="slot-grid">
                 {availableSlots.length === 0
-                  ? <p class="empty-msg">Momentálne nie sú dostupné žiadne voľné termíny.</p>
+                  ? <p class="empty-msg">Momentálne nie sú dostupné žiadne voľné termíny. Kliknite na „Objednať sa“ a ambulancia vás zaradí do čakacej listiny.</p>
                   : availableSlots.map(slot => (
                       <button class="slot slot-bookable" onClick={() => this.slotBookingRequested.emit(slot)}>
                         <strong>{slot.startsAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
@@ -150,6 +154,10 @@ export class SpecialistBookingAppointmentList {
             </button>
           </div>
         </section>
+
+        <div class="flow-note">
+          <strong>Práca ambulancie:</strong> lekár spravuje kapacity termínov, kontroluje čakajúce žiadosti a mení stavy objednávok. Nové žiadosti sa do termínov priraďujú automaticky podľa typu vyšetrenia a kapacity.
+        </div>
 
         <div class="stats-row">
           <div class="stat-card">

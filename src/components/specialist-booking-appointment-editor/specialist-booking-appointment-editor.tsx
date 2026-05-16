@@ -116,6 +116,7 @@ export class SpecialistBookingAppointmentEditor {
     }
 
     const isNew = this.appointmentId === '@new';
+    const patientMode = this.role === 'patient';
 
     return (
       <Host>
@@ -126,12 +127,23 @@ export class SpecialistBookingAppointmentEditor {
 
         <header class="page-header">
           <div>
-            <p class="eyebrow">Objednávka pacienta</p>
-            <h1>{isNew ? 'Nová objednávka' : 'Upraviť objednávku'}</h1>
+            <p class="eyebrow">{patientMode ? 'Žiadosť o vyšetrenie' : 'Objednávka pacienta'}</p>
+            <h1>{patientMode ? (isNew ? 'Požiadať o termín' : 'Detail mojej žiadosti') : (isNew ? 'Nová objednávka' : 'Upraviť objednávku')}</h1>
           </div>
         </header>
 
         <div class="card">
+          {patientMode ? (
+            <div class="workflow-note">
+              <md-icon>info</md-icon>
+              <span>Vyplňte základné údaje a preferovaný typ vyšetrenia. Stav objednávky nastaví ambulancia automaticky podľa dostupných termínov.</span>
+            </div>
+          ) : (
+            <div class="workflow-note">
+              <md-icon>admin_panel_settings</md-icon>
+              <span>Režim lekára: môžete upraviť údaje, stav objednávky a spracovať požiadavku pacienta.</span>
+            </div>
+          )}
           <form ref={el => (this.formElement = el)}>
             <md-filled-text-field label="Meno a priezvisko pacienta" required value={this.appointment?.patientName}
               oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.patientName = this.handleInputEvent(ev); }}>
@@ -151,7 +163,7 @@ export class SpecialistBookingAppointmentEditor {
             <div class="datetime-field">
               <md-icon>schedule</md-icon>
               <div class="datetime-inner">
-                <span class="datetime-label">Začiatok objednávky *</span>
+                <span class="datetime-label">{patientMode ? 'Preferovaný dátum a čas' : 'Začiatok objednávky *'}</span>
                 <input
                   type="datetime-local"
                   class="datetime-input"
@@ -184,7 +196,7 @@ export class SpecialistBookingAppointmentEditor {
               <md-select-option value="Ortopedické vyšetrenie"><div slot="headline">Ortopedické vyšetrenie</div></md-select-option>
             </md-filled-select>
 
-            {this.role === 'doctor' ? (
+            {!patientMode ? (
               <md-filled-select label="Stav objednávky" value={this.appointment?.status}
                 style={{ '--md-filled-select-container-color': '#ffffff', '--md-sys-color-surface-container-highest': '#ffffff', '--md-sys-color-primary': '#0d9488', '--md-sys-color-secondary-container': '#f0fdfa', '--md-filled-select-hover-state-layer-opacity': '0', '--md-filled-select-focus-state-layer-opacity': '0' } as any}
                 oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.status = this.handleInputEvent(ev) as AppointmentStatusEnum; }}>
@@ -228,7 +240,7 @@ export class SpecialistBookingAppointmentEditor {
           <span class="stretch-fill"></span>
           <button class="save-btn" onClick={() => this.updateAppointment()}>
             <md-icon>save</md-icon>
-            Uložiť
+            {patientMode ? 'Odoslať žiadosť' : 'Uložiť'}
           </button>
         </div>
       </Host>
