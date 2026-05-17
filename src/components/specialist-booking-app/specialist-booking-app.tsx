@@ -14,7 +14,7 @@ declare global {
 })
 export class SpecialistBookingApp {
   @State() private relativePath = '';
-  @State() private role: 'patient' | 'doctor' = 'patient';
+  @State() private role: 'patient' | 'doctor' = (sessionStorage.getItem('sb-role') as 'patient' | 'doctor') ?? 'patient';
   @State() private pendingSlot: TimeSlot | null = null;
 
   @Prop() basePath: string = '';
@@ -45,6 +45,7 @@ export class SpecialistBookingApp {
 
   private setRole(role: 'patient' | 'doctor') {
     this.role = role;
+    sessionStorage.setItem('sb-role', role);
     const absolute = new URL('./list', new URL(this.basePath, document.baseURI)).pathname;
     window.navigation.navigate(absolute);
   }

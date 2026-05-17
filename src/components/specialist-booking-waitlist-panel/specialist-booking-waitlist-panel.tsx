@@ -39,6 +39,10 @@ export class SpecialistBookingWaitlistPanel {
     this.errorMessage = undefined;
     try {
       const response = await fetch(`${this.apiBase}/specialist-booking/${this.clinicId}/waiting-list`);
+      if (response.status === 404) {
+        this.entries = [];
+        return;
+      }
       if (!response.ok) {
         this.errorMessage = `Nepodarilo sa načítať čakaciu listinu (${response.status})`;
         this.entries = [];
@@ -75,36 +79,60 @@ export class SpecialistBookingWaitlistPanel {
   render() {
     return (
       <Host>
-        <section class="hero compact">
-          <p class="eyebrow">Pracovný zoznam ambulancie</p>
-          <h1>Čakajúce žiadosti bez voľného termínu</h1>
+        <button class="back-link" onClick={() => this.appointmentsOpened.emit('appointments')}>
+          <md-icon>arrow_back</md-icon>
+          Objednávky
+        </button>
+
+        <section class="hero">
+          <div>
+            <p class="eyebrow">Pracovný zoznam ambulancie</p>
+            <h1>Čakajúce žiadosti</h1>
+          </div>
           <div class="hero-actions">
-            <md-outlined-button onClick={() => this.appointmentsOpened.emit('appointments')}>Objednávky</md-outlined-button>
-            <md-filled-button onClick={() => this.reload()}>Obnoviť</md-filled-button>
+            <button class="hero-secondary" onClick={() => this.reload()}>
+              <md-icon>refresh</md-icon>
+              Obnoviť
+            </button>
           </div>
         </section>
 
+        <div class="flow-note">
+          <strong>Čakacia listina:</strong> pacienti, ktorých systém zatiaľ nevedel automaticky priradiť do vhodného termínu. Po vytvorení alebo uvoľnení kapacity môžete skúsiť priradenie znova.
+        </div>
+
         {this.loading ? <md-linear-progress indeterminate></md-linear-progress> : null}
-        {this.errorMessage ? <div class="error">{this.errorMessage}</div> : null}
-        {this.infoMessage ? <div class="info">{this.infoMessage}</div> : null}
 
-        <p class="description">Tu lekár vidí pacientov, ktorých systém zatiaľ nevedel automaticky priradiť do vhodného termínu. Po vytvorení alebo uvoľnení kapacity môžete skúsiť priradenie znova.</p>
+        {this.errorMessage ? <div class="error-banner">{this.errorMessage}</div> : null}
+        {this.infoMessage ? <div class="info-banner">{this.infoMessage}</div> : null}
 
-        <md-list>
-          {this.entries.map(entry => (
-            <md-list-item>
-              <div slot="headline">{entry.patientName}</div>
-              <div slot="supporting-text">
-                {entry.examinationType} · zaradené {new Date(entry.requestedAt).toLocaleString('sk-SK')}
-              </div>
-              <md-filled-tonal-button slot="end" onClick={() => this.assignBestSlot(entry.appointmentId)}>
-                Priradiť najbližší termín
-              </md-filled-tonal-button>
-            </md-list-item>
-          ))}
-        </md-list>
+        <div class="panel">
+          <div class="panel-heading">
+            <span class="icon-badge"><md-icon>hourglass_top</md-icon></span>
+            <div>
+              <p class="label">Čakacia listina</p>
+              <h2>Bez voľného termínu</h2>
+            </div>
+          </div>
 
-        {!this.loading && this.entries.length === 0 ? <p class="empty">Čakacia listina je prázdna.</p> : null}
+          <div class="waitlist">
+            {!this.loading && this.entries.length === 0 ? (
+              <p class="empty-msg">Čakacia listina je prázdna.</p>
+            ) : (
+              this.entries.map(entry => (
+                <div class="waitlist-row">
+                  <md-icon class="row-icon">person</md-icon>
+                  <div class="row-text">
+                    <span class="row-name">{entry.patientName}</span>
+                    <span class="row-detail">
+                      {entry.examinationType + ' · zaradené ' + new Date(entry.requestedAt).toLocaleDateString('sk-SK', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
       </Host>
     );
   }

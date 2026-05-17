@@ -73,24 +73,80 @@ export class SpecialistBookingAppointmentEditor {
     return true;
   }
 
-  private async updateAppointment() {
-    if (!this.validateForm()) return;
-    if (this.appointment && this.role === 'patient') {
-      this.appointment.status = AppointmentStatusEnum.Requested;
+  private async updateAppointment(overrideStatus?: AppointmentStatusEnum) {
+    if (!overrideStatus && !this.validateForm()) return;
+    const payload = { ...this.appointment };
+    if (overrideStatus) {
+      payload.status = overrideStatus;
+    } else if (this.role === 'patient') {
+      payload.status = AppointmentStatusEnum.Requested;
+      if (!payload.patientId) {
+        const rnd = (digits: number) => Math.floor(Math.random() * Math.pow(10, digits)).toString().padStart(digits, '0');
+        payload.patientId = `${rnd(6)}/${rnd(4)}`;
+      }
     }
     try {
       const response = this.appointmentId === '@new'
-        ? await this.api().createAppointmentRaw({ clinicId: this.clinicId, appointment: this.appointment })
-        : await this.api().updateAppointmentRaw({ clinicId: this.clinicId, appointmentId: this.appointmentId, appointment: this.appointment });
+        ? await this.api().createAppointmentRaw({ clinicId: this.clinicId, appointment: payload })
+        : await this.api().updateAppointmentRaw({ clinicId: this.clinicId, appointmentId: this.appointmentId, appointment: payload });
 
       if (response.raw.status < 299) {
-        this.editorClosed.emit('store');
+        if (overrideStatus) this.appointment = { ...this.appointment, status: overrideStatus };
+        else this.editorClosed.emit('store');
       } else {
         this.errorMessage = `Nepodarilo sa uložiť objednávku: ${response.raw.statusText}`;
       }
     } catch (err: any) {
       this.errorMessage = `Nepodarilo sa uložiť objednávku: ${err.message || 'neznáma chyba'}`;
     }
+  }
+
+  private renderStatusPanel() {
+    const status = this.appointment?.status;
+    const statusMeta: Record<string, { label: string; cls: string; icon: string }> = {
+      requested:  { label: 'Čaká na potvrdenie', cls: 'requested',  icon: 'hourglass_top' },
+      confirmed:  { label: 'Potvrdené',           cls: 'confirmed',  icon: 'check_circle' },
+      completed:  { label: 'Ukončené',             cls: 'completed',  icon: 'task_alt' },
+      cancelled:  { label: 'Zrušené',              cls: 'cancelled',  icon: 'cancel' },
+    };
+    const current = statusMeta[status] ?? { label: status, cls: 'requested', icon: 'help' };
+
+    const actions: { label: string; status: AppointmentStatusEnum; icon: string; cls: string }[] = [];
+    if (status === 'requested') {
+      actions.push({ label: 'Potvrdiť', status: AppointmentStatusEnum.Confirmed, icon: 'check_circle', cls: 'action-confirm' });
+    } else if (status === 'confirmed') {
+      actions.push({ label: 'Ukončiť', status: AppointmentStatusEnum.Completed, icon: 'task_alt', cls: 'action-complete' });
+    }
+
+    return (
+      <div class="status-panel">
+        <div class={`status-badge status-${current.cls}`}>
+          <md-icon>{current.icon}</md-icon>
+          {current.label}
+        </div>
+      </div>
+    );
+  }
+
+  private renderStatusAction() {
+    const status = this.appointment?.status;
+    if (status === 'requested') {
+      return (
+        <button class="status-action-btn action-confirm" onClick={() => this.updateAppointment(AppointmentStatusEnum.Confirmed)}>
+          <md-icon>check_circle</md-icon>
+          Potvrdiť
+        </button>
+      );
+    }
+    if (status === 'confirmed') {
+      return (
+        <button class="status-action-btn action-complete" onClick={() => this.updateAppointment(AppointmentStatusEnum.Completed)}>
+          <md-icon>task_alt</md-icon>
+          Ukončiť
+        </button>
+      );
+    }
+    return null;
   }
 
   private async deleteAppointment() {
@@ -130,6 +186,7 @@ export class SpecialistBookingAppointmentEditor {
             <p class="eyebrow">{patientMode ? 'Žiadosť o vyšetrenie' : 'Objednávka pacienta'}</p>
             <h1>{patientMode ? (isNew ? 'Požiadať o termín' : 'Detail mojej žiadosti') : (isNew ? 'Nová objednávka' : 'Upraviť objednávku')}</h1>
           </div>
+          {!isNew && !patientMode && this.renderStatusPanel()}
         </header>
 
         <div class="card">
@@ -138,22 +195,23 @@ export class SpecialistBookingAppointmentEditor {
               <md-icon>info</md-icon>
               <span>Vyplňte základné údaje a preferovaný typ vyšetrenia. Stav objednávky nastaví ambulancia automaticky podľa dostupných termínov.</span>
             </div>
-          ) : (
+          ) : isNew ? (
             <div class="workflow-note">
               <md-icon>admin_panel_settings</md-icon>
-              <span>Režim lekára: môžete upraviť údaje, stav objednávky a spracovať požiadavku pacienta.</span>
+              <span>Režim lekára: vytvorte novú objednávku pre pacienta.</span>
             </div>
-          )}
+          ) : null}
           <form ref={el => (this.formElement = el)}>
             <md-filled-text-field label="Meno a priezvisko pacienta" required value={this.appointment?.patientName}
               oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.patientName = this.handleInputEvent(ev); }}>
               <md-icon slot="leading-icon">person</md-icon>
             </md-filled-text-field>
 
-            <md-filled-text-field label="Registračné číslo pacienta" required value={this.appointment?.patientId}
-              oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.patientId = this.handleInputEvent(ev); }}>
-              <md-icon slot="leading-icon">fingerprint</md-icon>
-            </md-filled-text-field>
+            {!patientMode && (
+              <md-filled-text-field label="Registračné číslo pacienta" readonly value={this.appointment?.patientId}>
+                <md-icon slot="leading-icon">fingerprint</md-icon>
+              </md-filled-text-field>
+            )}
 
             <md-filled-text-field label="Email pacienta" type="email" value={this.appointment?.patientEmail}
               oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.patientEmail = this.handleInputEvent(ev); }}>
@@ -196,17 +254,6 @@ export class SpecialistBookingAppointmentEditor {
               <md-select-option value="Ortopedické vyšetrenie"><div slot="headline">Ortopedické vyšetrenie</div></md-select-option>
             </md-filled-select>
 
-            {!patientMode ? (
-              <md-filled-select label="Stav objednávky" value={this.appointment?.status}
-                style={{ '--md-filled-select-container-color': '#ffffff', '--md-sys-color-surface-container-highest': '#ffffff', '--md-sys-color-primary': '#0d9488', '--md-sys-color-secondary-container': '#f0fdfa', '--md-filled-select-hover-state-layer-opacity': '0', '--md-filled-select-focus-state-layer-opacity': '0' } as any}
-                oninput={(ev: InputEvent) => { if (this.appointment) this.appointment.status = this.handleInputEvent(ev) as AppointmentStatusEnum; }}>
-                <md-icon slot="leading-icon">pending_actions</md-icon>
-                <md-select-option value="requested"><div slot="headline">Čaká na potvrdenie</div></md-select-option>
-                <md-select-option value="confirmed"><div slot="headline">Potvrdené</div></md-select-option>
-                <md-select-option value="completed"><div slot="headline">Ukončené</div></md-select-option>
-                <md-select-option value="cancelled"><div slot="headline">Zrušené</div></md-select-option>
-              </md-filled-select>
-            ) : null}
           </form>
 
           <div class="duration-section">
@@ -237,6 +284,7 @@ export class SpecialistBookingAppointmentEditor {
               Zrušiť objednávku
             </button>
           )}
+          {!isNew && !patientMode && this.renderStatusAction()}
           <span class="stretch-fill"></span>
           <button class="save-btn" onClick={() => this.updateAppointment()}>
             <md-icon>save</md-icon>

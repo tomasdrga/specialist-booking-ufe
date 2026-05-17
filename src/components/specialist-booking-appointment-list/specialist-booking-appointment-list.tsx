@@ -97,7 +97,7 @@ export class SpecialistBookingAppointmentList {
                       <button class="slot slot-bookable" onClick={() => this.slotBookingRequested.emit(slot)}>
                         <strong>{slot.startsAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
                         <span>{slot.examinationType}</span>
-                        <small>{slot.durationMinutes} min</small>
+                        <small>{slot.startsAt?.toLocaleDateString('sk-SK', { day: 'numeric', month: 'long' }) + ' · ' + slot.durationMinutes + ' min'}</small>
                         <span class="slot-book-hint"><md-icon>arrow_forward</md-icon>Objednať</span>
                       </button>
                     ))
@@ -133,6 +133,14 @@ export class SpecialistBookingAppointmentList {
         )}
       </Host>
     );
+  }
+
+  private groupSlotsByDay(): Record<string, TimeSlot[]> {
+    return this.timeSlots.reduce((acc, slot) => {
+      const key = slot.startsAt.toLocaleDateString('sk-SK', { weekday: 'long', day: 'numeric', month: 'long' });
+      acc[key] = [...(acc[key] || []), slot];
+      return acc;
+    }, {} as Record<string, TimeSlot[]>);
   }
 
   private renderDoctor() {
@@ -196,7 +204,7 @@ export class SpecialistBookingAppointmentList {
                     <md-icon class="row-icon">person</md-icon>
                     <div class="row-text">
                       <span class="row-name">{a.patientName}</span>
-                      <span class="row-detail">{a.examinationType + ' · ' + a.startsAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' · ' + a.durationMinutes + ' min'}</span>
+                      <span class="row-detail">{a.examinationType + ' · ' + a.startsAt?.toLocaleDateString('sk-SK', { day: 'numeric', month: 'long' }) + ' · ' + a.startsAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' · ' + a.durationMinutes + ' min'}</span>
                     </div>
                     <span class={`status ${a.status}`}>{
                       {
@@ -220,12 +228,17 @@ export class SpecialistBookingAppointmentList {
                 </div>
               </div>
               <div class="slot-grid">
-                {this.timeSlots.map(slot => (
-                  <article class={{ slot: true, blocked: slot.urgentBlocked }}>
-                    <strong>{slot.startsAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
-                    <span>{slot.examinationType}</span>
-                    <small>{slot.urgentBlocked ? 'Blokované pre urgentný prípad' : slot.booked + '/' + slot.capacity + ' obsadené · ' + slot.durationMinutes + ' min'}</small>
-                  </article>
+                {Object.entries(this.groupSlotsByDay()).map(([day, slots]) => (
+                  <div class="day-group">
+                    <p class="day-group-header">{day}</p>
+                    {slots.map(slot => (
+                      <article class={{ slot: true, blocked: slot.urgentBlocked }}>
+                        <strong>{slot.startsAt?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</strong>
+                        <span>{slot.examinationType}</span>
+                        <small>{slot.urgentBlocked ? 'Blokované pre urgentný prípad' : slot.booked + '/' + slot.capacity + ' obsadené · ' + slot.durationMinutes + ' min'}</small>
+                      </article>
+                    ))}
+                  </div>
                 ))}
               </div>
               <div class="panel-footer">

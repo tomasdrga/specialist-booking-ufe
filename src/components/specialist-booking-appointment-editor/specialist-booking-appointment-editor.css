@@ -26,6 +26,10 @@
   max-width: 680px;
   width: 100%;
   margin: 0 auto;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .eyebrow {
@@ -140,6 +144,57 @@ form {
   font: inherit;
 }
 
+
+.status-panel {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.status-badge.status-requested { background: #fef3c7; color: #92400e; }
+.status-badge.status-confirmed  { background: #d1fae5; color: #065f46; }
+.status-badge.status-completed  { background: #f3f4f6; color: #374151; }
+.status-badge.status-cancelled  { background: #fee2e2; color: #991b1b; }
+
+.status-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.status-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.42rem 1rem;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  border: 1.5px solid;
+  transition: background 0.12s ease, transform 0.12s ease;
+}
+
+.status-action-btn:hover { transform: translateY(-1px); }
+
+.action-confirm  { background: #d1fae5; border-color: #6ee7b7; color: #065f46; }
+.action-confirm:hover  { background: #a7f3d0; }
+.action-complete { background: #e0f2fe; border-color: #7dd3fc; color: #075985; }
+.action-complete:hover { background: #bae6fd; }
+.action-cancel   { background: #fee2e2; border-color: #fca5a5; color: #991b1b; }
+.action-cancel:hover   { background: #fecaca; }
 
 .duration-section {
   display: flex;
