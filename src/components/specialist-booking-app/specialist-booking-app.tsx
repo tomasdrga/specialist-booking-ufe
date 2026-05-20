@@ -21,7 +21,16 @@ export class SpecialistBookingApp {
   @Prop() apiBase: string;
   @Prop() clinicId: string;
 
+  private static slotFromStorage(): TimeSlot | null {
+    const raw = sessionStorage.getItem('sb-pending-slot');
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    obj.startsAt = new Date(obj.startsAt);
+    return obj as TimeSlot;
+  }
+
   componentWillLoad() {
+    this.pendingSlot = SpecialistBookingApp.slotFromStorage();
     const baseUri = new URL(this.basePath, document.baseURI || '/').pathname;
 
     const toRelative = (path: string) => {
@@ -98,7 +107,7 @@ export class SpecialistBookingApp {
             api-base={this.apiBase}
             prefill-slot={this.pendingSlot}
             role={this.role}
-            oneditor-closed={() => { this.pendingSlot = null; navigate('./list'); }}
+            oneditor-closed={() => { this.pendingSlot = null; sessionStorage.removeItem('sb-pending-slot'); navigate('./list'); }}
           ></specialist-booking-appointment-editor>
         ) : element === 'slot-editor' ? (
           <specialist-booking-slot-editor
@@ -129,7 +138,7 @@ export class SpecialistBookingApp {
             onslots-opened={() => navigate('./slots')}
             onwaitlist-opened={() => navigate('./waitlist')}
             onentry-clicked={(ev: CustomEvent<string>) => navigate('./appointment/' + ev.detail)}
-            onslot-booking-requested={(ev: CustomEvent<TimeSlot>) => { this.pendingSlot = ev.detail; navigate('./appointment/@new'); }}
+            onslot-booking-requested={(ev: CustomEvent<TimeSlot>) => { this.pendingSlot = ev.detail; sessionStorage.setItem('sb-pending-slot', JSON.stringify(ev.detail)); navigate('./appointment/@new'); }}
           ></specialist-booking-appointment-list>
         )}
       </Host>

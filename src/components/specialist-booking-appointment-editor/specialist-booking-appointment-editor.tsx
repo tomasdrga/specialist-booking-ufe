@@ -21,10 +21,21 @@ export class SpecialistBookingAppointmentEditor {
 
   private formElement: HTMLFormElement;
   private readonly durations = [15, 30, 60];
+  private activeSlot: TimeSlot | null = null;
 
   async componentWillLoad() {
+    this.activeSlot = this.prefillSlot ?? this.slotFromStorage();
     this.appointment = await this.getAppointmentAsync();
-    this.duration = this.appointment?.durationMinutes ?? this.prefillSlot?.durationMinutes ?? 30;
+    this.duration = this.appointment?.durationMinutes ?? this.activeSlot?.durationMinutes ?? 30;
+  }
+
+  private slotFromStorage(): TimeSlot | null {
+    if (this.appointmentId !== '@new') return null;
+    const raw = sessionStorage.getItem('sb-pending-slot');
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    obj.startsAt = new Date(obj.startsAt);
+    return obj as TimeSlot;
   }
 
   private api() {
@@ -38,9 +49,9 @@ export class SpecialistBookingAppointmentEditor {
         patientId: '',
         patientName: '',
         patientEmail: '',
-        startsAt: this.prefillSlot?.startsAt ?? new Date(Date.now() + 24 * 60 * 60 * 1000),
-        durationMinutes: this.prefillSlot?.durationMinutes ?? 30,
-        examinationType: this.prefillSlot?.examinationType ?? 'Kardiologické vyšetrenie',
+        startsAt: this.activeSlot?.startsAt ?? new Date(Date.now() + 24 * 60 * 60 * 1000),
+        durationMinutes: this.activeSlot?.durationMinutes ?? 30,
+        examinationType: this.activeSlot?.examinationType ?? 'Kardiologické vyšetrenie',
         status: AppointmentStatusEnum.Requested,
       };
     }
@@ -222,13 +233,19 @@ export class SpecialistBookingAppointmentEditor {
               <md-icon>schedule</md-icon>
               <div class="datetime-inner">
                 <span class="datetime-label">{patientMode ? 'Preferovaný dátum a čas' : 'Začiatok objednávky *'}</span>
-                <input
-                  type="datetime-local"
-                  class="datetime-input"
-                  value={this.toDatetimeLocal(this.appointment?.startsAt)}
-                  onInput={(ev: InputEvent) => { if (this.appointment) this.appointment.startsAt = new Date((ev.target as HTMLInputElement).value); }}
-                  required
-                />
+                {this.activeSlot ? (
+                  <span class="datetime-input datetime-fixed">
+                    {this.appointment?.startsAt?.toLocaleString('sk-SK', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                ) : (
+                  <input
+                    type="datetime-local"
+                    class="datetime-input"
+                    value={this.toDatetimeLocal(this.appointment?.startsAt)}
+                    onInput={(ev: InputEvent) => { if (this.appointment) this.appointment.startsAt = new Date((ev.target as HTMLInputElement).value); }}
+                    required
+                  />
+                )}
               </div>
             </div>
 
